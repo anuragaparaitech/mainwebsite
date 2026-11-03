@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.4), 0 0 30px rgba(37, 99, 235, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.65), 0 0 45px rgba(37, 99, 235, 0.35);
+  }
+}
+@keyframes vibrate {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-2px); }
+  40%, 80% { transform: translateX(2px); }
+}
+@keyframes icon-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg) scale(1.08); }
+  75% { transform: rotate(10deg) scale(1.08); }
+}
+.ai-agent-btn-animated {
+  animation: glow-pulse 3s infinite ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ai-agent-btn-animated:hover {
+  animation: vibrate 0.4s ease-in-out;
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.8), 0 0 50px rgba(37, 99, 235, 0.4);
+}
+.ai-agent-btn-animated:hover .ai-icon {
+  animation: icon-wiggle 0.4s ease-in-out;
+}
+
+html { scroll-behavior: smooth; }
+
+/* Staggered slide-up reveal for the Philosophy cards (UI plan: translateY 40px -> 0, 150ms steps) */
+.reveal-item { opacity: 0; }
+.is-visible .reveal-item {
+  animation: reveal-up 0.6s ease both;
+  animation-delay: calc(var(--i, 0) * 150ms);
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal-item { opacity: 1; }
+  .is-visible .reveal-item { animation: none; }
+  .ai-agent-btn-animated { animation: none; }
+}
