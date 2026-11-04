@@ -16,10 +16,8 @@ export default function Services() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-mono-tag text-mono-tag text-on-surface-variant uppercase">
-              AUDITED DISCIPLINE
-            </span>
-            <span className="w-2 h-2 rounded-full bg-secondary"></span>
+            
+            
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

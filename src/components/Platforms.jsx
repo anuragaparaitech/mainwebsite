@@ -21,9 +21,7 @@ export default function Platforms() {
                 <span className="px-3 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-mono-tag text-mono-tag font-bold">
                   ENTERPRISE SAAS
                 </span>
-                <span className="font-mono-tag text-mono-tag text-on-surface-variant">
-                  v4.2.0 STABLE
-                </span>
+                
               </div>
               <h3 className="font-display-hero text-headline-md font-bold text-on-surface mb-3">
                 NovaTax
@@ -31,7 +29,7 @@ export default function Platforms() {
               <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
                 Enterprise Tax & Compliance platform for multistate & cross-border fiscal operations. Engineered with sub-millisecond calculation speeds, automated reconciliation audit logs, and direct integration with apex regulatory filing gateways.
               </p>
-              <div className="bg-surface-container-lowest rounded-lg p-5 shadow-sm space-y-4 mb-6">
+              {/* <div className="bg-surface-container-lowest rounded-lg p-5 shadow-sm space-y-4 mb-6">
                 <div className="flex items-center justify-between text-body-sm font-body-sm pb-3">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-secondary"></span>
@@ -69,7 +67,7 @@ export default function Platforms() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="pt-4 flex items-center justify-between">
               <div className="flex items-center gap-2 font-mono-tag text-mono-tag text-on-surface-variant">
@@ -96,9 +94,7 @@ export default function Platforms() {
                 <span className="px-3 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-mono-tag text-mono-tag font-bold">
                   COMMUNICATION ENGINE
                 </span>
-                <span className="font-mono-tag text-mono-tag text-on-surface-variant">
-                  CLUSTER ONLINE
-                </span>
+                
               </div>
               <h3 className="font-display-hero text-headline-md font-bold text-on-surface mb-3">
                 BlastBee
@@ -106,7 +102,7 @@ export default function Platforms() {
               <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
                 High-volume marketing, omnichannel campaigns, and intelligence automation. Capable of dispatching millions of transactional SMS, WhatsApp messages, and rich push notifications with guaranteed deliverability and analytics telemetry.
               </p>
-              <div className="bg-surface-container-lowest rounded-lg p-5 shadow-sm space-y-4 mb-6">
+              {/* <div className="bg-surface-container-lowest rounded-lg p-5 shadow-sm space-y-4 mb-6">
                 <div className="flex items-center justify-between text-body-sm font-body-sm pb-3">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-secondary"></span>
@@ -144,7 +140,7 @@ export default function Platforms() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="pt-4 flex items-center justify-between">
               <div className="flex items-center gap-2 font-mono-tag text-mono-tag text-on-surface-variant">

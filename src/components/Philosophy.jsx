@@ -33,10 +33,8 @@ export default function Philosophy() {
               </p>
             </div>
             <div className="mt-8 pt-4 flex items-center gap-2 font-mono-tag text-mono-tag text-on-surface-variant">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-              <span>
-                END-USER ERGONOMICS
-              </span>
+              
+    
             </div>
           </div>
           <div className="bg-surface-container-low p-8 md:p-10 rounded-lg flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow reveal-item" style={{ "--i": "1" }}>
@@ -57,10 +55,8 @@ export default function Philosophy() {
               </p>
             </div>
             <div className="mt-8 pt-4 flex items-center gap-2 font-mono-tag text-mono-tag text-secondary font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-              <span>
-                ISO 27001 • SOC 2 TYPE II PREPARED
-              </span>
+              
+              
             </div>
           </div>
           <div className="bg-surface-container-lowest p-8 md:p-10 rounded-lg flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow reveal-item" style={{ "--i": "2" }}>
@@ -81,10 +77,8 @@ export default function Philosophy() {
               </p>
             </div>
             <div className="mt-8 pt-4 flex items-center gap-2 font-mono-tag text-mono-tag text-on-surface-variant">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-              <span>
-                LIFECYCLE STEWARDSHIP
-              </span>
+              
+            
             </div>
           </div>
         </div>
