@@ -78,24 +78,30 @@ export default function Footer() {
                 </p>
               </div>
               <div>
-                
+                <p className="font-semibold text-on-secondary">
+                  Bengaluru Innovation Hub
+                </p>
                 <p className="text-xs">
                   Software Corridor, Karnataka
                 </p>
               </div>
               <div>
-                
-                
+                <p className="font-semibold text-on-secondary">
+                  Japan Strategic Partner
+                </p>
+                <p className="text-xs">
+                  Embarc.Inc, Tokyo, Japan
+                </p>
               </div>
             </div>
           </div>
         </div>
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 font-mono-tag text-mono-tag text-on-primary-container">
           <p>
-            © 2026 Aparaitech Software. All rights reserved. 
+            © 2026 AparaiTech Software. All rights reserved. Directed by Founder Pratik Pawar.
           </p>
           <p>
-            Pune (Hinjawadi Phase 2) 
+            Pune (Hinjawadi Phase 2) • Bengaluru • Tokyo Partner
           </p>
         </div>
       </div>
