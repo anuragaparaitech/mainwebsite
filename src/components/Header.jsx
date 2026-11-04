@@ -1,11 +1,13 @@
 import useScrolled from '../hooks/useScrolled';
 import Logo from './Logo';
+import { Link } from 'react-router-dom';
 
-export default function Header({ onOpenMenu, onOpenDrawer }) {
+export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
   const scrolled = useScrolled(50);
+  const solidHeader = solid || scrolled;
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-40 w-full px-6 lg:px-8 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E2E8F0] py-3.5' : 'bg-transparent py-5'}`} id="main-header">
+      <header className={`fixed top-0 left-0 right-0 z-40 w-full px-6 lg:px-8 transition-all duration-300 ${solidHeader ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E2E8F0] py-3.5' : 'bg-transparent py-5'}`} id="main-header">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4 lg:gap-5">
             <button aria-label="Open navigation menu" className="w-12 h-12 rounded-full flex items-center justify-center bg-white text-[#0F172A] shadow-md hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2563EB]" onClick={onOpenMenu} type="button">
@@ -13,18 +15,21 @@ export default function Header({ onOpenMenu, onOpenDrawer }) {
                 menu
               </span>
             </button>
-            <a href="#" aria-label="Aparaitech home">
-              <Logo size="lg" onDark={!scrolled} nameId="brand-wordmark" nameClassName={scrolled ? 'text-[#0F172A]' : 'text-white'} />
-            </a>
+            <Link to="/" aria-label="Aparaitech home">
+              <Logo size="lg" onDark={!solidHeader} nameId="brand-wordmark" nameClassName={solidHeader ? 'text-[#0F172A]' : 'text-white'} />
+            </Link>
           </div>
           <nav className="hidden lg:flex items-center gap-7 bg-white/75 backdrop-blur-md rounded-full px-7 py-2.5 shadow-sm border border-white/30" data-active-classes="text-[#2563EB] font-semibold">
-            <a aria-current="page" className="text-[#2563EB] font-semibold text-sm transition-colors relative py-1" data-path="services" href="#services">
+            <Link aria-current="page" className="text-[#2563EB] font-semibold text-sm transition-colors relative py-1" data-path="services" to="/services">
               Services
               <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
-            </a>
-            <a className="text-[#0F172A] hover:text-[#2563EB] text-sm font-medium transition-colors py-1" data-path="our-platforms" href="#platforms-section">
+            </Link>
+            <Link className="text-[#0F172A] hover:text-[#2563EB] text-sm font-medium transition-colors py-1" data-path="our-platforms" to="/#platforms-section">
               Our Platforms
-            </a>
+            </Link>
+            <Link className="text-[#0F172A] hover:text-[#2563EB] text-sm font-medium transition-colors py-1" to="/contact">
+              Contact Us
+            </Link>
             <a className="text-[#0F172A] hover:text-[#2563EB] text-sm font-medium transition-colors py-1" data-path="our-collaborations" href="#">
               Our Collaborations
             </a>

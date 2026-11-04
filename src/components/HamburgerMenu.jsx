@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import useEscape from '../hooks/useEscape';
 import Logo from './Logo';
+import { Link } from 'react-router-dom';
 
 export default function HamburgerMenu({ open, onClose }) {
   useEscape(onClose, open);
@@ -20,12 +21,12 @@ export default function HamburgerMenu({ open, onClose }) {
             </button>
           </div>
           <nav className="flex flex-col gap-2">
-            <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="services" href="#services" onClick={onClose}>
+            <Link className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="services" to="/services" onClick={onClose}>
               Services
-            </a>
-            <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="our-platforms" href="#platforms-section" onClick={onClose}>
+            </Link>
+            <Link className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="our-platforms" to="/#platforms-section" onClick={onClose}>
               Our Platforms
-            </a>
+            </Link>
             <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="our-team" href="#" onClick={onClose}>
               Our Team
             </a>
@@ -35,9 +36,9 @@ export default function HamburgerMenu({ open, onClose }) {
             <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="careers" href="#" onClick={onClose}>
               Careers
             </a>
-            <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="contact-us" href="#" onClick={onClose}>
+            <Link className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="contact-us" to="/contact" onClick={onClose}>
               Contact Us
-            </a>
+            </Link>
             <a className="px-4 py-3 rounded flex items-center gap-2 text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="project-estimation-cost" href="#" onClick={onClose}>
               <span className="w-2 h-2 rounded-full bg-secondary"></span>
               <span>

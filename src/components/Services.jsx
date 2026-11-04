@@ -1,6 +1,46 @@
+import { Link } from 'react-router-dom';
+import { services } from '../services/serviceDetails';
+
+const icons = {
+  'cloud-solutions': (
+    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+  ),
+  'custom-software-development': (
+    <>
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+      <line x1="14" x2="10" y1="4" y2="20" />
+    </>
+  ),
+  'ai-automation': (
+    <>
+      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  'devops-ci-cd': (
+    <>
+      <path d="M20 7v5h-5M4 17v-5h5" />
+      <path d="M5.6 9a7 7 0 0 1 11.6-2L20 12M4 12l2.8 5a7 7 0 0 0 11.6-2" />
+    </>
+  ),
+  'cybersecurity-solutions': (
+    <>
+      <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
+      <path d="m9 12 2 2 4-4" />
+    </>
+  ),
+  'mobile-app-development': (
+    <>
+      <rect height="18" rx="2" width="12" x="6" y="3" />
+      <path d="M11 18h2" />
+    </>
+  ),
+};
+
 export default function Services() {
   return (
-    <section className="w-full bg-surface text-on-surface py-32" id="services">
+    <section className="w-full bg-surface text-on-surface py-32">
       <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
@@ -20,98 +60,46 @@ export default function Services() {
             
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="w-14 h-14 rounded bg-surface-container-low flex items-center justify-center mb-8 text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
-                </svg>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <Link
+              aria-label={`Learn more about ${service.cardTitle}`}
+              className="bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+              key={service.slug}
+              to={`/services/${service.slug}`}
+            >
+              <div>
+                <div className="w-14 h-14 rounded bg-surface-container-low flex items-center justify-center mb-8 text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+                  <svg aria-hidden="true" className="w-7 h-7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24">
+                    {icons[service.slug]}
+                  </svg>
+                </div>
+                <span className="font-mono-tag text-mono-tag text-secondary font-semibold uppercase tracking-wider block mb-2">
+                  {service.category}
+                </span>
+                <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
+                  {service.cardTitle}
+                </h3>
+                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                  {service.shortDescription}
+                </p>
               </div>
-              <span className="font-mono-tag text-mono-tag text-secondary font-semibold uppercase tracking-wider block mb-2">
-                INFRASTRUCTURE
-              </span>
-              <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                Cloud Solutions
-              </h3>
-              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                Resilient multi-cloud architectures, auto-scaling and migration. Kubernetes orchestration, zero-downtime database failovers, and cost telemetry.
-              </p>
-            </div>
-            <div className="mt-8 pt-6 flex items-center justify-between text-body-sm font-body-sm font-semibold text-secondary group-hover:translate-x-1 transition-transform">
-              <span>
-                Explore Architecture
-              </span>
-              <span className="material-symbols-outlined text-[18px]">
-                arrow_forward
-              </span>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="w-14 h-14 rounded bg-surface-container-low flex items-center justify-center mb-8 text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <polyline points="16 18 22 12 16 6"></polyline>
-                  <polyline points="8 6 2 12 8 18"></polyline>
-                  <line x1="14" x2="10" y1="4" y2="20"></line>
-                </svg>
+              <div className="mt-8 pt-6 flex items-center justify-between text-body-sm font-body-sm font-semibold text-secondary group-hover:translate-x-1 transition-transform">
+                <span>Explore service</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </div>
-              <span className="font-mono-tag text-mono-tag text-secondary font-semibold uppercase tracking-wider block mb-2">
-                FULL-CYCLE DEV
-              </span>
-              <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                Custom Software
-              </h3>
-              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                Tailored enterprise applications engineered for massive scale. Event-driven backend backbones, robust micro-frontends, and strict domain isolation.
-              </p>
-            </div>
-            <div className="mt-8 pt-6 flex items-center justify-between text-body-sm font-body-sm font-semibold text-secondary group-hover:translate-x-1 transition-transform">
-              <span>
-                Engineering Stack
-              </span>
-              <span className="material-symbols-outlined text-[18px]">
-                arrow_forward
-              </span>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="w-14 h-14 rounded bg-surface-container-low flex items-center justify-center mb-8 text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </div>
-              <span className="font-mono-tag text-mono-tag text-secondary font-semibold uppercase tracking-wider block mb-2">
-                INTELLIGENCE
-              </span>
-              <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                AI & Automation
-              </h3>
-              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                Deploy specialized LLM workflows, conversational bots and data pipelines. Privacy-first local inference, vector RAG pipelines, and automated ingestion.
-              </p>
-            </div>
-            <div className="mt-8 pt-6 flex items-center justify-between text-body-sm font-body-sm font-semibold text-secondary group-hover:translate-x-1 transition-transform">
-              <span>
-                Model Deployments
-              </span>
-              <span className="material-symbols-outlined text-[18px]">
-                arrow_forward
-              </span>
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
         <div className="mt-14 text-center">
-          <a className="inline-flex items-center gap-2 font-body-md text-body-md font-semibold text-secondary hover:text-secondary-container transition-colors py-2 px-4 rounded hover:bg-surface-container" href="#">
+          <Link className="inline-flex items-center gap-2 font-body-md text-body-md font-semibold text-secondary hover:text-secondary-container transition-colors py-2 px-4 rounded hover:bg-surface-container" to="/services">
             <span>
               View all services
             </span>
             <span className="material-symbols-outlined text-[20px]">
               arrow_forward
             </span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

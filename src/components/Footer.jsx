@@ -1,4 +1,6 @@
 import Logo from './Logo';
+import { Link } from 'react-router-dom';
+import { services } from '../services/serviceDetails';
 
 export default function Footer() {
   return (
@@ -22,24 +24,13 @@ export default function Footer() {
               SERVICES
             </h4>
             <ul className="space-y-2.5 font-body-sm text-body-sm">
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Cloud Computing
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Software Development
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                AI & Machine Learning
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                DevOps & CI/CD
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Cybersecurity Solutions
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Mobile App Development
-              </li>
+              {services.map((service) => (
+                <li key={service.slug}>
+                  <Link className="text-on-primary-container hover:text-on-secondary transition-colors" to={`/services/${service.slug}`}>
+                    {service.cardTitle}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="space-y-4">

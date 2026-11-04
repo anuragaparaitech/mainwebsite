@@ -7,7 +7,7 @@ const RULES = [
   {
     test: /(service|cloud|software|ai\b|automation|devops)/i,
     reply:
-      'We deliver three core capabilities: Cloud Solutions (resilient multi-cloud architectures, auto-scaling and migration), Custom Software (tailored enterprise applications engineered for massive scale) and AI & Automation (LLM workflows, conversational bots and data pipelines). See the Services section for details.',
+      'We deliver Cloud Solutions, Custom Software, AI & Automation, DevOps & CI/CD, Cybersecurity Solutions, and Mobile App Development. Visit the Services section to explore each capability.',
   },
   {
     test: /(platform|novatax|blastbee|apna|kitchen|service hub|cet|product)/i,
