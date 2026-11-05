@@ -111,6 +111,18 @@ export default function Platforms({ onOpenDrawer }) {
                 </div>
               </div>
 
+              {selectedPlatform.domain && (
+                <a
+                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#2563eb] px-5 py-3 font-body-sm text-body-sm font-semibold text-white transition-all hover:bg-[#174fc1] hover:shadow-lg hover:shadow-blue-200"
+                  href={selectedPlatform.domain}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Visit Official Website
+                  <span className="material-symbols-outlined text-[18px]" aria-hidden="true">open_in_new</span>
+                </a>
+              )}
+
               <div className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                 <div className="min-h-0 overflow-hidden">
                   <div className="mt-7 grid gap-4 border-t border-slate-200 pt-7 md:grid-cols-2">
