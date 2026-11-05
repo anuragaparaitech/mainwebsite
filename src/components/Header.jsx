@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import useScrolled from '../hooks/useScrolled';
 import Logo from './Logo';
 import { Link } from 'react-router-dom';
+import { services } from '../services/serviceDetails';
 
 export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
   const scrolled = useScrolled(50);
   const solidHeader = solid || scrolled;
+  const [activeServiceSlug, setActiveServiceSlug] = useState('cloud-solutions');
+  const activeService = services.find((service) => service.slug === activeServiceSlug) || services[0];
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-40 w-full px-6 lg:px-8 transition-all duration-300 ${solidHeader ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E2E8F0] py-3.5' : 'bg-transparent py-5'}`} id="main-header">
@@ -20,10 +24,68 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
             </Link>
           </div>
           <nav className="hidden lg:flex items-center gap-7 bg-white/75 backdrop-blur-md rounded-full px-7 py-2.5 shadow-sm border border-white/30" data-active-classes="text-[#2563EB] font-semibold">
-            <Link aria-current="page" className="text-[#2563EB] font-semibold text-sm transition-colors relative py-1" data-path="services" to="/services">
-              Services
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
-            </Link>
+            <div className="services-nav-item relative">
+              <Link
+                aria-controls="services-nav-dropdown"
+                aria-haspopup="true"
+                className="text-[#2563EB] font-semibold text-sm transition-colors relative py-1"
+                data-path="services"
+                to="/services"
+              >
+                Services
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+              </Link>
+              <div className="services-nav-dropdown absolute left-1/2 top-full z-50 w-[min(90vw,900px)] -translate-x-1/2 pt-4" id="services-nav-dropdown">
+                <div className="grid max-h-[min(75vh,620px)] grid-cols-[minmax(190px,0.38fr)_minmax(0,1fr)] overflow-hidden rounded-xl border border-outline-variant/50 bg-white shadow-2xl">
+                  <ul aria-label="Service categories" className="space-y-1 overflow-y-auto border-r border-outline-variant/40 bg-surface p-3">
+                    {services.map((service) => (
+                      <li key={service.slug}>
+                        <button
+                          aria-pressed={service.slug === activeService.slug}
+                          className={`w-full rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
+                            service.slug === activeService.slug
+                              ? 'bg-secondary text-white'
+                              : 'text-on-surface hover:bg-white hover:text-secondary'
+                          }`}
+                          onFocus={() => setActiveServiceSlug(service.slug)}
+                          onMouseEnter={() => setActiveServiceSlug(service.slug)}
+                          type="button"
+                        >
+                          {service.cardTitle}
+                        </button>
+                      </li>
+                    ))}
+                    <li className="border-t border-outline-variant/40 pt-2">
+                      <Link className="block rounded-md px-3 py-2 text-sm font-semibold text-secondary hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary" to="/services">
+                        View all services →
+                      </Link>
+                    </li>
+                  </ul>
+                  <div className="overflow-y-auto p-5 md:p-6">
+                    <div className="flex items-start justify-between gap-4 border-b border-outline-variant/40 pb-4">
+                      <div>
+                        <h2 className="mt-1 text-lg font-bold text-on-surface">{activeService.cardTitle}</h2>
+                      </div>
+                      <Link className="shrink-0 text-sm font-semibold text-secondary hover:underline" to={`/services/${activeService.slug}`}>
+                        Details →
+                      </Link>
+                    </div>
+                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                      {activeService.industryUseCases.map(({ industry, description }) => (
+                        <Link
+                          className="rounded-md border border-outline-variant/40 p-3 transition-colors hover:border-secondary/50 hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                          key={industry}
+                          to={`/services/${activeService.slug}`}
+                        >
+                          <span className="block text-sm font-semibold text-on-surface">{industry}</span>
+                          <span className="mt-1 block text-xs leading-relaxed text-on-surface-variant">{description}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <Link className="text-[#0F172A] hover:text-[#2563EB] text-sm font-medium transition-colors py-1" data-path="our-platforms" to="/#platforms-section">
               Our Platforms
             </Link>

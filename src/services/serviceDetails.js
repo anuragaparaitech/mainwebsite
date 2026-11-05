@@ -1,10 +1,11 @@
-export const services = [
+const existingServices = [
   {
     slug: 'cloud-solutions',
     icon: 'cloud',
-    category: 'Infrastructure',
+    image: '/images/services/cloud-solutions.jpg',
+    imageAlt: 'Cloud infrastructure and connected devices',
     cardTitle: 'Cloud Solutions',
-    title: 'Cloud Solutions',
+    title: 'Cloud Solutions (AWS/Azure)',
     shortDescription:
       'Resilient multi-cloud architectures, auto-scaling and migration. Kubernetes orchestration, zero-downtime database failovers, and cost telemetry.',
     heroDescription:
@@ -44,8 +45,9 @@ export const services = [
   {
     slug: 'custom-software-development',
     icon: 'terminal',
-    category: 'Full-cycle development',
-    cardTitle: 'Custom Software',
+    image: '/images/services/custom-software.jpg',
+    imageAlt: 'Custom software development team',
+    cardTitle: 'Custom Software Development',
     title: 'Custom Software Development',
     shortDescription:
       'Tailored enterprise applications engineered for massive scale. Event-driven backend backbones, robust micro-frontends, and strict domain isolation.',
@@ -86,9 +88,10 @@ export const services = [
   {
     slug: 'ai-automation',
     icon: 'auto_awesome',
-    category: 'Intelligence',
-    cardTitle: 'AI & Automation',
-    title: 'AI & Automation',
+    image: '/images/services/ai-automation.jpg',
+    imageAlt: 'Team working with AI and automation tools',
+    cardTitle: 'AI & Machine Learning',
+    title: 'AI & Machine Learning',
     shortDescription:
       'Deploy specialized LLM workflows, conversational bots and data pipelines. Privacy-first local inference, vector RAG pipelines, and automated ingestion.',
     heroDescription:
@@ -128,7 +131,8 @@ export const services = [
   {
     slug: 'devops-ci-cd',
     icon: 'sync_alt',
-    category: 'Delivery & operations',
+    image: '/images/services/devops.jpg',
+    imageAlt: 'DevOps and software delivery',
     cardTitle: 'DevOps & CI/CD',
     title: 'DevOps & CI/CD',
     shortDescription:
@@ -170,9 +174,10 @@ export const services = [
   {
     slug: 'cybersecurity-solutions',
     icon: 'shield',
-    category: 'Security & resilience',
-    cardTitle: 'Cybersecurity Solutions',
-    title: 'Cybersecurity Solutions',
+    image: '/images/services/cyber.jpg',
+    imageAlt: 'Cybersecurity operations',
+    cardTitle: 'Cybersecurity & Compliance',
+    title: 'Cybersecurity & Compliance',
     shortDescription:
       'Strengthen application and cloud security with practical risk reviews, secure engineering practices, access controls, and remediation planning.',
     heroDescription:
@@ -212,7 +217,8 @@ export const services = [
   {
     slug: 'mobile-app-development',
     icon: 'smartphone',
-    category: 'Mobile experiences',
+    image: '/images/services/Android.jpg',
+    imageAlt: 'Android and mobile app development',
     cardTitle: 'Mobile App Development',
     title: 'Mobile App Development',
     shortDescription:
@@ -251,4 +257,234 @@ export const services = [
       ['Do you support app releases?', 'Yes. Release preparation and post-launch improvements can be included in the engagement scope.'],
     ],
   },
+];
+
+function createAdditionalService({
+  slug,
+  icon,
+  image,
+  imageAlt,
+  cardTitle,
+  title,
+  shortDescription,
+  heroDescription,
+  overview,
+  features,
+  technologies,
+  industryUseCases,
+}) {
+  return {
+    slug,
+    icon,
+    image,
+    imageAlt,
+    cardTitle,
+    title,
+    shortDescription,
+    heroDescription,
+    overview,
+    features,
+    process: [
+      ['Discover', 'Understand your users, goals, existing systems, and delivery constraints.'],
+      ['Plan', 'Agree on a focused solution, architecture, success measures, and delivery roadmap.'],
+      ['Deliver', 'Build and validate the solution in reviewable increments with your team.'],
+      ['Improve', 'Measure results, support adoption, and refine the service as needs evolve.'],
+    ],
+    technologies,
+    benefits: [
+      ['Built around your needs', `Shape ${title} around your workflows, users, and business priorities.`],
+      ['Designed to evolve', 'Use maintainable foundations that can adapt as your organization grows.'],
+      ['Clear delivery', 'Keep decisions, milestones, and ownership visible throughout the engagement.'],
+      ['Practical outcomes', 'Focus on useful improvements that can be measured and supported.'],
+    ],
+    industryUseCases,
+    useCases: industryUseCases.map(({ industry, description }) => `${industry}: ${description}`),
+    faqs: [
+      [`What does ${title} include?`, `The scope is tailored to your goals and may include discovery, design, implementation, integrations, and ongoing improvements.`],
+      ['Can you work with our existing team and systems?', 'Yes. We review your current environment and can collaborate with your team and existing tools.'],
+      ['How do we get started?', 'Start with a conversation about your users, goals, constraints, and the outcome you want to achieve.'],
+    ],
+  };
+}
+
+const additionalServices = [
+  createAdditionalService({
+    slug: 'saas-product-engineering',
+    icon: 'cloud_queue',
+    cardTitle: 'SaaS Product Engineering',
+    title: 'SaaS Product Engineering',
+    shortDescription: 'Multi-tenant, cloud-native platforms designed for secure subscriptions, reliable operations, and sustainable product growth.',
+    heroDescription: 'Plan, build, and evolve subscription software with dependable multi-tenant foundations and a product experience that can grow with your customers.',
+    overview: 'From early product validation through production engineering, we help build SaaS platforms with clear tenant boundaries, secure account management, dependable billing flows, and operational visibility.',
+    features: [
+      'Multi-tenant SaaS architecture and subscription workflows',
+      'Customer onboarding, roles, permissions, and account management',
+      'Product APIs, integrations, and cloud-native platform engineering',
+      'Quality automation, observability, and continuous product improvements',
+    ],
+    technologies: ['React', 'Node.js', 'PostgreSQL', 'Cloud platforms', 'REST APIs', 'CI/CD', 'Automated testing'],
+    industryUseCases: [
+      { industry: 'FinTech', description: 'Tax automation platforms like NovaTax.' },
+      { industry: 'HR Tech', description: 'Employee onboarding and payroll tools.' },
+      { industry: 'EdTech', description: 'Subscription-based learning platforms.' },
+      { industry: 'Marketing', description: 'Email automation platforms like BlastBee.' },
+      { industry: 'E-Commerce', description: 'Store management platforms like Apna Store.' },
+      { industry: 'Legal Tech', description: 'Document and compliance tracking.' },
+    ],
+  }),
+  createAdditionalService({
+    slug: 'data-analytics-bi',
+    icon: 'analytics',
+    cardTitle: 'Data Analytics & BI',
+    title: 'Data Analytics & Business Intelligence',
+    shortDescription: 'Turn operational data into useful dashboards, reliable reporting, and decision-ready insights.',
+    heroDescription: 'Connect the data behind your business and make it easier for teams to understand performance, spot trends, and take informed action.',
+    overview: 'We help organizations organize and connect relevant data sources, define metrics consistently, and deliver analytics experiences that are understandable and useful to the people making decisions.',
+    features: [
+      'Analytics discovery, metric definition, and reporting strategy',
+      'Data integration, modeling, and quality checks',
+      'Role-based dashboards and business intelligence reporting',
+      'Forecasting, trend analysis, and analytics workflow automation',
+    ],
+    technologies: ['SQL', 'Python', 'Data warehouses', 'ETL/ELT pipelines', 'Business intelligence tools', 'Cloud analytics'],
+    industryUseCases: [
+      { industry: 'E-Commerce', description: 'Sales forecasting and customer lifetime value tracking.' },
+      { industry: 'Logistics', description: 'Route optimization analytics.' },
+      { industry: 'Education', description: 'Student performance tracking.' },
+      { industry: 'Marketing', description: 'Campaign return-on-investment tracking.' },
+      { industry: 'Manufacturing', description: 'Overall equipment effectiveness dashboards.' },
+      { industry: 'Healthcare', description: 'Resource utilization metrics.' },
+    ],
+  }),
+  createAdditionalService({
+    slug: 'enterprise-it-consulting',
+    icon: 'business',
+    cardTitle: 'Enterprise IT Consulting',
+    title: 'Enterprise IT Consulting',
+    shortDescription: 'Plan practical technology modernization and digital transformation around your organization’s priorities.',
+    heroDescription: 'Make confident technology decisions with a clear view of your current systems, business goals, risks, and a realistic path forward.',
+    overview: 'We work with business and technology stakeholders to understand the current environment, prioritize the right investments, and create roadmaps that balance modernization, cost, security, and operational change.',
+    features: [
+      'Technology strategy and digital transformation roadmaps',
+      'Architecture and technology stack assessments',
+      'Legacy modernization and systems integration planning',
+      'Cloud adoption, IT cost, and operational improvement strategies',
+    ],
+    technologies: ['Enterprise architecture', 'Cloud platforms', 'Application modernization', 'IT governance', 'Systems integration', 'Technology roadmaps'],
+    industryUseCases: [
+      { industry: 'Startups', description: 'Technology stack selection for scaling.' },
+      { industry: 'SMEs', description: 'Legacy system modernization.' },
+      { industry: 'Enterprises', description: 'IT cost optimization.' },
+      { industry: 'Academia', description: 'Campus operations digitization.' },
+      { industry: 'Healthcare', description: 'Electronic health record adoption strategy.' },
+      { industry: 'Corporate', description: 'Cloud migration strategy.' },
+    ],
+  }),
+  createAdditionalService({
+    slug: 'ui-ux-design',
+    icon: 'design_services',
+    cardTitle: 'UI/UX Design',
+    title: 'UI/UX Design',
+    shortDescription: 'Create accessible, human-centric digital experiences that make important tasks easier for your users.',
+    heroDescription: 'Bring clarity to every interaction with thoughtful research, accessible interface design, and consistent digital experiences.',
+    overview: 'We connect user needs with product goals through discovery, journey mapping, prototyping, and design systems. The result is a usable interface that your product and engineering teams can confidently build and evolve.',
+    features: [
+      'User research, discovery, and journey mapping',
+      'Information architecture, wireframes, and interactive prototypes',
+      'Accessible interface design and reusable design systems',
+      'Usability testing and developer-ready design handoff',
+    ],
+    technologies: ['Figma', 'Prototyping', 'Design systems', 'Accessibility practices', 'Usability testing', 'Responsive design'],
+    industryUseCases: [
+      { industry: 'Real Estate', description: 'Immersive property discovery and 360-degree walkthrough experiences.' },
+      { industry: 'Healthcare', description: 'Accessible patient interfaces and clear care journeys.' },
+      { industry: 'EdTech', description: 'Gamified learning dashboards.' },
+      { industry: 'Finance', description: 'Distraction-free banking applications.' },
+      { industry: 'SaaS', description: 'Intuitive product and administration dashboards.' },
+      { industry: 'Corporate', description: 'Minimalist enterprise branding and digital experiences.' },
+    ],
+  }),
+  createAdditionalService({
+    slug: 'digital-portfolios-bios',
+    icon: 'person',
+    cardTitle: 'Digital Portfolios & Bios',
+    title: 'Digital Portfolios & Professional Bios',
+    shortDescription: 'Build polished personal websites and professional profiles that communicate expertise and achievements.',
+    heroDescription: 'Create a distinctive digital presence for leaders, researchers, professionals, and creators with a portfolio tailored to their work and goals.',
+    overview: 'We shape a clear story around your experience, work, and audience, then create a responsive portfolio or profile website that is easy to navigate, maintain, and share.',
+    features: [
+      'Personal brand discovery and content structure',
+      'Custom portfolio and biography website design',
+      'Project showcases, publications, speaking, and media sections',
+      'Responsive implementation and content management guidance',
+    ],
+    technologies: ['Responsive web design', 'Content strategy', 'Accessibility practices', 'Search optimization', 'Portfolio CMS', 'Analytics'],
+    industryUseCases: [
+      { industry: 'Academia', description: 'Professor and researcher portfolios.' },
+      { industry: 'Startups', description: 'Founder profiles and pitch websites.' },
+      { industry: 'Corporate', description: 'Executive leadership showcases.' },
+      { industry: 'Healthcare', description: 'Professional profiles for leading doctors.' },
+      { industry: 'Real Estate', description: 'Personal branding websites for top agents.' },
+      { industry: 'Creators', description: 'Author and speaker portfolios.' },
+    ],
+  }),
+];
+
+const existingIndustryUseCases = {
+  'custom-software-development': [
+    { industry: 'Healthcare', description: 'HIPAA-compliant patient portals.' },
+    { industry: 'Real Estate', description: 'Property listings and agent CRM.' },
+    { industry: 'Education', description: 'Custom LMS and student portals.' },
+    { industry: 'Logistics', description: 'Fleet tracking and route applications.' },
+    { industry: 'Retail', description: 'Custom POS and inventory software.' },
+    { industry: 'Manufacturing', description: 'Supply chain tracking.' },
+  ],
+  'cloud-solutions': [
+    { industry: 'E-Commerce', description: 'Auto-scaling for traffic surges.' },
+    { industry: 'Media', description: 'High-bandwidth video hosting.' },
+    { industry: 'Banking', description: 'Encrypted financial environments.' },
+    { industry: 'Startups', description: 'Serverless MVP deployment.' },
+    { industry: 'IoT', description: 'Real-time machine data integration.' },
+    { industry: 'Healthcare', description: 'Cloud backup and disaster recovery.' },
+  ],
+  'devops-ci-cd': [
+    { industry: 'SaaS', description: 'Zero-downtime platform updates.' },
+    { industry: 'Mobile', description: 'Automated iOS and Android deployments.' },
+    { industry: 'FinTech', description: 'Automated security checks.' },
+    { industry: 'Enterprise', description: 'Automated testing and integration.' },
+    { industry: 'Microservices', description: 'Docker and Kubernetes orchestration.' },
+    { industry: 'Legacy', description: 'Monolithic application migration to cloud.' },
+  ],
+  'ai-automation': [
+    { industry: 'Retail', description: 'Recommendation engines and churn prediction.' },
+    { industry: 'Healthcare', description: 'AI-assisted medical imaging analysis.' },
+    { industry: 'Real Estate', description: 'Property valuation algorithms.' },
+    { industry: 'Finance', description: 'Fraud detection and risk assessment.' },
+    { industry: 'Education', description: 'Personalized learning and automated grading.' },
+    { industry: 'Manufacturing', description: 'Predictive maintenance.' },
+  ],
+  'cybersecurity-solutions': [
+    { industry: 'Healthcare', description: 'HIPAA compliance support and encryption.' },
+    { industry: 'Finance', description: 'SOC 2 compliance support and fraud detection.' },
+    { industry: 'E-Commerce', description: 'PCI DSS compliance support and DDoS protection.' },
+    { industry: 'SaaS', description: 'Role-based access control (RBAC).' },
+    { industry: 'Enterprise', description: 'Authorized penetration testing and remediation planning.' },
+    { industry: 'EdTech', description: 'Data privacy audits.' },
+  ],
+  'mobile-app-development': [
+    { industry: 'Retail', description: 'Customer shopping and loyalty applications.' },
+    { industry: 'Healthcare', description: 'Patient access and care coordination tools.' },
+    { industry: 'Logistics', description: 'Field operations and delivery applications.' },
+    { industry: 'Finance', description: 'Secure mobile account experiences.' },
+    { industry: 'Education', description: 'Mobile learning and student tools.' },
+    { industry: 'Enterprise', description: 'Secure apps for distributed teams.' },
+  ],
+};
+
+export const services = [
+  ...existingServices.map((service) => ({
+    ...service,
+    industryUseCases: existingIndustryUseCases[service.slug],
+  })),
+  ...additionalServices,
 ];

@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <>
-      <Header solid={location.pathname !== '/'} onOpenMenu={() => setMenuOpen(true)} onOpenDrawer={() => setDrawerOpen(true)} />
+      <Header solid={location.pathname !== '/' && location.pathname !== '/services'} onOpenMenu={() => setMenuOpen(true)} onOpenDrawer={() => setDrawerOpen(true)} />
       <HamburgerMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
       <ChatDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <Routes>

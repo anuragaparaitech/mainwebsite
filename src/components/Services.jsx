@@ -1,105 +1,89 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { services } from '../services/serviceDetails';
 
-const icons = {
-  'cloud-solutions': (
-    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
-  ),
-  'custom-software-development': (
-    <>
-      <polyline points="16 18 22 12 16 6" />
-      <polyline points="8 6 2 12 8 18" />
-      <line x1="14" x2="10" y1="4" y2="20" />
-    </>
-  ),
-  'ai-automation': (
-    <>
-      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-      <circle cx="12" cy="12" r="3" />
-    </>
-  ),
-  'devops-ci-cd': (
-    <>
-      <path d="M20 7v5h-5M4 17v-5h5" />
-      <path d="M5.6 9a7 7 0 0 1 11.6-2L20 12M4 12l2.8 5a7 7 0 0 0 11.6-2" />
-    </>
-  ),
-  'cybersecurity-solutions': (
-    <>
-      <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
-      <path d="m9 12 2 2 4-4" />
-    </>
-  ),
-  'mobile-app-development': (
-    <>
-      <rect height="18" rx="2" width="12" x="6" y="3" />
-      <path d="M11 18h2" />
-    </>
-  ),
-};
+export default function Services({ standalone = false }) {
+  const [activeSlug, setActiveSlug] = useState('cloud-solutions');
+  const activeService = services.find((service) => service.slug === activeSlug) || services[0];
 
-export default function Services() {
   return (
-    <section className="w-full bg-surface text-on-surface py-32">
+    <section className={`w-full bg-surface text-on-surface ${standalone ? 'pb-32' : 'py-32'}`}>
+      {standalone ? (
+        <div className="services-hero">
+          <div className="services-hero-content">
+            <div className="max-w-3xl">
+              <h2 className="font-headline-lg text-headline-lg font-bold text-white tracking-tight">
+                High-Assurance Digital Services
+              </h2>
+              <p className="font-body-md text-body-md text-white/90 mt-2 max-w-xl">
+                Modular engineering practices purpose-built to accelerate production timetables while neutralizing operational risk.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div>
-            <span className="inline-flex items-center gap-2 font-mono-tag text-mono-tag font-semibold text-secondary tracking-widest uppercase mb-3">
-              <span className="w-2 h-0.5 bg-secondary"></span>
-              {' '}TECHNICAL CAPABILITIES
-            </span>
-            <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
-              High-Assurance Digital Services
-            </h2>
-            <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
-              Modular engineering practices purpose-built to accelerate production timetables while neutralizing operational risk.
-            </p>
+        {!standalone && (
+          <div className="mb-16">
+            <div className="max-w-3xl">
+              <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
+                High-Assurance Digital Services
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
+                Modular engineering practices purpose-built to accelerate production timetables while neutralizing operational risk.
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            
-            
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <Link
-              aria-label={`Learn more about ${service.cardTitle}`}
-              className="bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-              key={service.slug}
-              to={`/services/${service.slug}`}
-            >
-              <div>
-                <div className="w-14 h-14 rounded bg-surface-container-low flex items-center justify-center mb-8 text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-                  <svg aria-hidden="true" className="w-7 h-7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24">
-                    {icons[service.slug]}
-                  </svg>
-                </div>
-                <span className="font-mono-tag text-mono-tag text-secondary font-semibold uppercase tracking-wider block mb-2">
-                  {service.category}
-                </span>
-                <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                  {service.cardTitle}
-                </h3>
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                  {service.shortDescription}
-                </p>
+        )}
+        <div className="grid gap-6 lg:grid-cols-[minmax(230px,0.32fr)_minmax(0,1fr)] lg:gap-10">
+          <nav aria-label="Service categories" className="space-y-2">
+            {services.map((service, index) => {
+              const isActive = service.slug === activeService.slug;
+              return (
+                <button
+                  aria-pressed={isActive}
+                  className={`flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
+                    isActive
+                      ? 'border-secondary bg-secondary text-white shadow-sm'
+                      : 'border-outline-variant/50 bg-white text-on-surface hover:border-secondary/50 hover:bg-surface-container-low'
+                  }`}
+                  key={service.slug}
+                  onClick={() => setActiveSlug(service.slug)}
+                  onFocus={() => setActiveSlug(service.slug)}
+                  onMouseEnter={() => setActiveSlug(service.slug)}
+                  type="button"
+                >
+                  <span className="w-7 shrink-0 font-mono-tag text-xs opacity-70">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="font-semibold leading-snug">{service.cardTitle}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined ml-auto text-[18px]">chevron_right</span>
+                </button>
+              );
+            })}
+          </nav>
+          <section aria-label={`${activeService.cardTitle} industries`} className="min-w-0 rounded-xl border border-outline-variant/50 bg-white p-5 shadow-sm md:p-8">
+            <div className="flex flex-col gap-5 border-b border-outline-variant/40 pb-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <h3 className="mt-2 text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{activeService.cardTitle}</h3>
+                <p className="mt-3 leading-relaxed text-on-surface-variant">{activeService.shortDescription}</p>
               </div>
-              <div className="mt-8 pt-6 flex items-center justify-between text-body-sm font-body-sm font-semibold text-secondary group-hover:translate-x-1 transition-transform">
-                <span>Explore service</span>
-                <span aria-hidden="true" className="material-symbols-outlined text-[18px]">arrow_forward</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-14 text-center">
-          <Link className="inline-flex items-center gap-2 font-body-md text-body-md font-semibold text-secondary hover:text-secondary-container transition-colors py-2 px-4 rounded hover:bg-surface-container" to="/services">
-            <span>
-              View all services
-            </span>
-            <span className="material-symbols-outlined text-[20px]">
-              arrow_forward
-            </span>
-          </Link>
+              <Link className="inline-flex shrink-0 items-center gap-2 font-semibold text-secondary hover:underline" to={`/services/${activeService.slug}`}>
+                Explore service <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {activeService.industryUseCases.map(({ industry, description }) => (
+                <Link
+                  aria-label={`${industry}: ${description}. Explore ${activeService.cardTitle}`}
+                  className="group rounded-lg border border-outline-variant/40 bg-surface p-4 transition-colors hover:border-secondary/50 hover:bg-secondary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                  key={industry}
+                  to={`/services/${activeService.slug}`}
+                >
+                  <span className="font-semibold text-on-surface group-hover:text-secondary">{industry}</span>
+                  <span className="mt-2 block text-sm leading-relaxed text-on-surface-variant">{description}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </section>
