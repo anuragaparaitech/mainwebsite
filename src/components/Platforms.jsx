@@ -1,134 +1,166 @@
-import CardImage from './CardImage';
+import { useState } from 'react';
+import { platforms } from '../data/platforms';
 
-// ---- EDIT HERE: card text and image paths ----------------------------------
-// Images go in  public/images/platforms/
-// All six cards are the same size, so use the same image size for all:
-// recommended 800 x 480 px (JPG / WebP / PNG, under ~200 KB). Other sizes are cropped to fit.
-const PLATFORMS = [
-  {
-    name: 'NovaTax',
-    image: '/images/platforms/novatax.jpg',
-    alt: 'NovaTax tax and compliance dashboard',
-    icon: 'account_balance',
-    tag: 'ENTERPRISE SAAS',
-    description: 'Enterprise Tax & Compliance platform for multistate & cross-border fiscal operations.',
-    status: 'v4.2.0 STABLE',
-  },
-  {
-    name: 'BlastBee',
-    image: '/images/platforms/blastbee.jpg',
-    alt: 'BlastBee messaging campaign dashboard',
-    icon: 'campaign',
-    tag: 'COMMUNICATION ENGINE',
-    description: 'High-volume marketing, omnichannel campaigns, and intelligence automation.',
-    status: 'CLUSTER ONLINE',
-  },
-  {
-    name: 'Apna Store',
-    image: '/images/platforms/apna-store.jpg',
-    alt: 'Apna Store e-commerce storefront',
-    icon: 'storefront',
-    tag: 'B2C • MULTI-TENANT',
-    description: 'Localized e-commerce and retail inventory operating system for direct-to-consumer merchants.',
-    status: 'OPERATIONAL',
-  },
-  {
-    name: 'Cloud Kitchen OS',
-    image: '/images/platforms/cloud-kitchen-os.jpg',
-    alt: 'Cloud Kitchen OS order management screen',
-    icon: 'restaurant',
-    tag: 'F&B OPERATIONS',
-    description:
-      'Centralized order routing, recipe costing, kitchen display synchronization, and inventory depletion engine.',
-    status: 'OPERATIONAL',
-  },
-  {
-    name: 'Service Hub Web',
-    image: '/images/platforms/service-hub-web.jpg',
-    alt: 'Service Hub Web field service scheduling',
-    icon: 'handyman',
-    tag: 'WORKFORCE MGMT',
-    description:
-      'Hyper-local field service scheduling, job ticket dispatching, warranty verification, and real-time vendor payouts.',
-    status: 'OPERATIONAL',
-  },
-  {
-    name: 'CET Test Portal',
-    image: '/images/platforms/cet-test-portal.jpg',
-    alt: 'CET Test Portal mock examination interface',
-    icon: 'quiz',
-    description:
-      'High-concurrency proctored mock examination portal for state-level entrance candidates with live percentile telemetry.',
-    status: 'SANDBOX TESTING',
-    launched: false, // shows the "To Be Launched" badge and a dimmed image
-  },
-];
-// ----------------------------------------------------------------------------
-
-export default function Platforms() {
+function PlatformIcon({ icon }) {
   return (
-    <section className="w-full bg-surface-container-lowest text-on-surface py-32" id="platforms-section">
-      <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
-        <div className="mb-16">
-          <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
-            <span className="w-2 h-0.5 bg-secondary"></span>
-            {' '}PROPRIETARY PRODUCT ECOSYSTEM
+    <span className="material-symbols-outlined text-[21px]" aria-hidden="true">
+      {icon}
+    </span>
+  );
+}
+
+function DetailSection({ title, children }) {
+  return (
+    <section className="rounded-2xl border border-blue-100 bg-[#f5f8ff] p-5 md:p-6">
+      <h4 className="font-body-sm text-body-sm font-bold uppercase tracking-[0.16em] text-[#2563eb]">{title}</h4>
+      <div className="mt-3 font-body-md text-body-md leading-relaxed text-slate-600">{children}</div>
+    </section>
+  );
+}
+
+export default function Platforms({ onOpenDrawer }) {
+  const [selectedSlug, setSelectedSlug] = useState(platforms[0].slug);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const selectedPlatform = platforms.find((platform) => platform.slug === selectedSlug) || platforms[0];
+
+  const selectPlatform = (slug) => {
+    setSelectedSlug(slug);
+    setIsExpanded(false);
+  };
+
+  return (
+    <main className="min-h-screen bg-white text-[#10233f]">
+      <section className="relative isolate flex min-h-[560px] items-end overflow-hidden bg-[#071b35] px-5 pb-16 pt-36 md:px-12 md:pb-24 lg:px-16">
+        <img
+          alt="Platforms hero background"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-40 mix-blend-luminosity"
+          src="/images/platforms-bg.png"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#071b35] via-[#071b35]/70 to-transparent" />
+        <div className="mx-auto max-w-[1280px]">
+          <span className="font-label-caps text-label-caps font-bold tracking-widest uppercase text-blue-300">
+            OUR PLATFORMS
           </span>
-          <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
-            Live Systems Operating in Production
-          </h2>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">
-            Engineered, maintained, and operated in-house by AparaiTech. Battle-tested codebases handling enterprise-scale transactions daily.
+          <h1 className="mt-3 max-w-4xl font-display-hero-mobile text-headline-lg font-bold text-white md:font-display-hero md:text-display-hero">
+            Enterprise platforms designed for speed, scale, and clarity.
+          </h1>
+          <p className="mt-5 max-w-2xl font-body-lg text-body-lg text-slate-200">
+            Aparaitech creates and operates specialized systems for modern operations, high-volume messaging, local commerce, and complex workflows.
           </p>
         </div>
+      </section>
 
-        {/* Six equal cards: 3 per row on desktop (2 rows), 2 per row on tablet, 1 on mobile.
-            auto-rows-fr makes every row the same height, and each card fills its cell. */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-8">
-          {PLATFORMS.map((p) => {
-            const launched = p.launched !== false;
-            return (
-              <div
-                key={p.name}
-                className={`${launched ? 'bg-surface' : 'bg-surface-container-low'} h-full rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group`}
+      <section className="mx-auto max-w-[1280px] px-5 py-14 md:px-12 lg:px-16">
+        <div className="grid gap-8 lg:grid-cols-[340px_1fr]">
+          <aside className="space-y-3">
+            {platforms.map((platform) => {
+              const active = platform.slug === selectedPlatform.slug;
+              return (
+                <button
+                  className={`w-full rounded-2xl border p-5 text-left transition-all ${
+                    active
+                      ? 'border-[#2563eb] bg-[#f5f8ff] shadow-md shadow-blue-100'
+                      : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                  key={platform.slug}
+                  onClick={() => selectPlatform(platform.slug)}
+                  type="button"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${active ? 'bg-[#2563eb] text-white' : 'bg-slate-100 text-[#10233f]'}`}>
+                      <PlatformIcon icon={platform.icon} />
+                    </span>
+                    <span className="font-mono-tag text-mono-tag text-slate-500">{platform.status}</span>
+                  </div>
+                  <h3 className="mt-4 font-title-md text-title-md font-bold text-[#10233f]">{platform.name}</h3>
+                  <p className="mt-1 font-body-sm text-body-sm text-slate-600">{platform.headline}</p>
+                </button>
+              );
+            })}
+          </aside>
+
+          <article className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm md:p-10">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6">
+              <div>
+                <span className="font-label-caps text-label-caps font-bold uppercase tracking-wider text-[#2563eb]">{selectedPlatform.tag}</span>
+                <h2 className="mt-1 font-headline-lg text-headline-lg font-bold text-[#10233f]">{selectedPlatform.name}</h2>
+              </div>
+              <span className="rounded-full bg-blue-50 px-3.5 py-1.5 font-body-sm text-body-sm font-semibold text-[#2563eb]">{selectedPlatform.status}</span>
+            </div>
+
+            <p className="mt-6 font-body-lg text-body-lg leading-relaxed text-slate-700">{selectedPlatform.description}</p>
+
+            <div className="mt-8">
+              <h4 className="font-body-sm text-body-sm font-bold uppercase tracking-[0.16em] text-[#2563eb]">Key Capabilities</h4>
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                {selectedPlatform.features.map((feature) => (
+                  <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4" key={feature}>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-[#2563eb]">
+                      <PlatformIcon icon={selectedPlatform.icon} />
+                    </span>
+                    <span className="pt-1 font-body-sm text-body-sm font-semibold leading-relaxed text-[#10233f]">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {selectedPlatform.domain && (
+              <a
+                className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#2563eb] px-5 py-3 font-body-sm text-body-sm font-semibold text-white transition-all hover:bg-[#174fc1] hover:shadow-lg hover:shadow-blue-200"
+                href={selectedPlatform.domain}
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                <CardImage src={p.image} alt={p.alt} icon={p.icon} muted={!launched} className="h-48 w-full shrink-0" />
-                <div className="p-6 flex flex-col justify-between flex-1">
-                  <div>
-                    <div className="flex items-center justify-between gap-3 mb-4">
-                      <div
-                        className={`w-10 h-10 rounded flex items-center justify-center shrink-0 ${launched ? 'bg-surface-container text-on-surface' : 'bg-secondary-fixed text-secondary'}`}
-                      >
-                        <span className="material-symbols-outlined text-[20px]">{p.icon}</span>
-                      </div>
-                      {launched ? (
-                        <span className="font-label-caps text-label-caps font-bold text-on-surface-variant text-right tracking-wider uppercase">{p.tag}</span>
-                      ) : (
-                        <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-caps text-label-caps font-bold tracking-wide whitespace-nowrap uppercase">
-                          To Be Launched
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-title-md text-title-md font-bold text-on-surface mb-2">{p.name}</h3>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">{p.description}</p>
-                  </div>
-                  <div className="mt-6 pt-4 flex items-center justify-between font-mono-tag text-mono-tag text-secondary font-semibold">
-                    <span>{p.status}</span>
-                    {launched ? (
-                      <span className="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                        Read More
-                        <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                      </span>
-                    ) : (
-                      <span className="material-symbols-outlined text-[16px]">hourglass_empty</span>
-                    )}
-                  </div>
+                Visit Official Website
+                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">open_in_new</span>
+              </a>
+            )}
+
+            <div className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+              <div className="min-h-0 overflow-hidden">
+                <div className="mt-7 grid gap-4 border-t border-slate-200 pt-7 md:grid-cols-2">
+                  <DetailSection title="What it solves">{selectedPlatform.problem}</DetailSection>
+                  <DetailSection title="How it helps">{selectedPlatform.howWorks}</DetailSection>
+                </div>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  <DetailSection title="Benefits">
+                    <ul className="space-y-2">
+                      {selectedPlatform.benefits.map((benefit) => <li className="flex items-start gap-2" key={benefit}><span className="text-[#2563eb]">•</span>{benefit}</li>)}
+                    </ul>
+                  </DetailSection>
+                  <DetailSection title="Use cases">
+                    <ul className="space-y-2">
+                      {selectedPlatform.useCases.map((useCase) => <li className="flex items-start gap-2" key={useCase}><span className="text-[#2563eb]">•</span>{useCase}</li>)}
+                    </ul>
+                  </DetailSection>
                 </div>
               </div>
-            );
-          })}
+            </div>
+
+            <button
+              aria-expanded={isExpanded}
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#2563eb] px-5 py-3 font-body-sm text-body-sm font-semibold text-white transition-all hover:bg-[#174fc1] hover:shadow-lg hover:shadow-blue-200"
+              onClick={() => setIsExpanded((expanded) => !expanded)}
+              type="button"
+            >
+              {isExpanded ? 'Read Less' : 'Read More'}
+              <span className="material-symbols-outlined text-[18px]">{isExpanded ? 'expand_less' : 'arrow_forward'}</span>
+            </button>
+          </article>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="border-t border-slate-200 bg-[#f5f8fd]">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-6 px-5 py-14 md:flex-row md:items-center md:justify-between md:px-12 lg:px-16">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-[#10233f]">Have a platform idea of your own?</h2>
+            <p className="mt-2 font-body-md text-body-md text-slate-600">Let’s turn a complex business need into a useful digital experience.</p>
+          </div>
+          <button className="inline-flex w-fit items-center gap-2 rounded-full bg-[#10233f] px-5 py-3 font-body-sm text-body-sm font-semibold text-white transition-colors hover:bg-[#19385e]" onClick={onOpenDrawer} type="button">
+            Talk to Aparaitech <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }

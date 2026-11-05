@@ -11,14 +11,9 @@ const ANNOUNCEMENTS = [
     tab: 'Launch',
     icon: 'rocket_launch',
     eyebrow: 'Product launch',
-    title: 'NovaTax Enterprise Compliance Suite',
-    body: 'Multi-state fiscal reconciliation engine with real-time statutory e-filing pipelines now operational for Tier-1 corporate balance sheets.',
-    stats: [
-      { label: 'Statutory sync', value: 'LIVE' },
-      { label: 'Uptime SLA', value: '99.98%' },
-    ],
-    note: 'Automated GST / TDS / cross-border ledger parity',
-    cta: { label: 'Review release notes & API specs', href: '#platforms-section', icon: 'arrow_forward' },
+    title: 'Aparaitech platform catalogue',
+    body: 'Explore Aparaitech product and solution briefs, including communication, AI and custom enterprise platform capabilities.',
+    cta: { label: 'Explore platforms', href: '/platforms', icon: 'arrow_forward' },
     dismissLabel: 'Acknowledge',
   },
   {
@@ -123,7 +118,7 @@ export default function Preloader({ onDone }) {
             </span>
             <span className="font-title-md text-title-md font-semibold">{item.eyebrow}</span>
           </div>
-          <span className="hidden md:block font-mono-tag text-mono-tag text-on-primary-container">ISO 27001 AUDITED</span>
+          <span className="hidden md:block font-mono-tag text-mono-tag text-on-primary-container">PRODUCT BRIEFS</span>
         </div>
 
         {/* Content panel */}

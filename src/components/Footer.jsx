@@ -1,4 +1,5 @@
 import Logo from './Logo';
+import { platforms } from '../data/platforms';
 
 export default function Footer({ onNavigate }) {
   const handleNav = (view, sectionId) => {
@@ -63,25 +64,15 @@ export default function Footer({ onNavigate }) {
             </ul>
           </div>
           <div className="space-y-4">
-            <h4 className="font-label-caps text-label-caps uppercase text-on-secondary tracking-wider font-bold">
-              LIVE PLATFORMS
-            </h4>
+            <h4 className="font-label-caps text-label-caps uppercase text-on-secondary tracking-wider font-bold">PLATFORMS</h4>
             <ul className="space-y-2.5 font-body-sm text-body-sm">
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Apna Store
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Cloud Kitchen OS
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Service Hub Web
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                NovaTax Platform
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                BlastBee Messaging
-              </li>
+              {platforms.map((platform) => (
+                <li key={platform.slug}>
+                  <a className="text-on-primary-container transition-colors hover:text-on-secondary" href="/platforms">
+                    {platform.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="space-y-4">
