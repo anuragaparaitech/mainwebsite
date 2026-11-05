@@ -17,7 +17,7 @@ export default function Hero({ statsRun, onOpenEnquiry }) {
           From custom software to scalable SaaS platforms, we build the digital infrastructure that powers global businesses.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          <a className="w-full sm:w-auto px-8 py-3.5 rounded bg-secondary text-on-secondary font-title-md text-title-md font-semibold shadow-lg shadow-secondary/30 hover:bg-secondary-container transition-all flex items-center justify-center gap-2" href="#platforms-section">
+          <a className="w-full sm:w-auto px-8 py-3.5 rounded bg-secondary text-on-secondary font-title-md text-title-md font-semibold shadow-lg shadow-secondary/30 hover:bg-secondary-container transition-all flex items-center justify-center gap-2" href="/platforms">
             <span>
               Explore Our Platforms
             </span>

@@ -9,7 +9,7 @@
 export const CAREERS_CONFIG = {
   // Replace this URL with your deployed Google Apps Script Web App URL:
   // e.g. "https://script.google.com/macros/s/AKfycbx.../exec"
-  GOOGLE_SHEETS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbylDQVwnc77Gd9eyzUOVHy8Gk_aB1rr22FUggT1GAICX5l4kCStVn5Ny9-7OgaddSGh/exec',
+  GOOGLE_SHEETS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw-f6PzcxMqGNB_rAc69BTTu_TL7etEUBAH4gRBOXkeG0AZTLWrGuwNoGLlZlCEbnCKmw/exec',
 
   // Fallback recipient email displayed to users if submission fails
   HR_EMAIL: 'careers@aparaitech.com',
