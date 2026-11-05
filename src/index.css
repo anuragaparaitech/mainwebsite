@@ -35,6 +35,40 @@
 
 html { scroll-behavior: smooth; }
 
+.services-hero {
+  width: 100%;
+  height: clamp(420px, 39.6875vw, 635px);
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 5rem;
+  background-image:
+    linear-gradient(rgba(4, 16, 38, 0.45), rgba(4, 16, 38, 0.65)),
+    url('/images/platforms-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.services-hero-content {
+  width: min(100% - 3rem, 1360px);
+  margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+  .services-hero {
+    height: clamp(420px, 70vh, 560px);
+    padding-bottom: 3rem;
+  }
+
+  .services-hero-content {
+    width: calc(100% - 3rem);
+  }
+}
+
+.services-nav-dropdown { display: none; }
+.services-nav-item:hover .services-nav-dropdown,
+.services-nav-item:focus-within .services-nav-dropdown { display: block; }
+
 /* Staggered slide-up reveal for the Philosophy cards (UI plan: translateY 40px -> 0, 150ms steps) */
 .reveal-item { opacity: 0; }
 .is-visible .reveal-item {

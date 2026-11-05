@@ -46,7 +46,7 @@ export default function HamburgerMenu({ open, onClose }) {
             <Link className={linkClass('/')} to="/" onClick={onClose}>
               Home
             </Link>
-            <Link className={linkClass('/#services')} to="/#services" onClick={onClose}>
+            <Link className={linkClass('/services')} to="/services" onClick={onClose}>
               Services
             </Link>
             <Link className={linkClass('/platforms')} to="/platforms" onClick={onClose}>

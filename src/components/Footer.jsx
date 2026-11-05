@@ -1,12 +1,18 @@
 import Logo from './Logo';
+import { Link } from 'react-router-dom';
 import { platforms } from '../data/platforms';
+import { services } from '../services/serviceDetails';
 
 export default function Footer({ onNavigate }) {
   const handleNav = (view, sectionId) => {
     if (onNavigate) {
       onNavigate(view, sectionId);
+    } else if (view === 'careers') {
+      window.location.href = '/careers';
+    } else if (sectionId) {
+      window.location.href = `/#${sectionId}`;
     } else {
-      window.location.hash = view === 'careers' ? '#careers' : (sectionId ? `#${sectionId}` : '#');
+      window.location.href = '/';
     }
   };
 
@@ -15,9 +21,9 @@ export default function Footer({ onNavigate }) {
       <div className="max-w-[1440px] mx-auto px-4 md:px-gutter-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-16">
           <div className="space-y-4">
-            <button type="button" onClick={() => handleNav('home')} className="text-left">
+            <Link to="/" className="text-left inline-block">
               <Logo size="sm" onDark nameClassName="text-on-secondary" />
-            </button>
+            </Link>
             <p className="font-body-sm text-body-sm text-on-primary-container leading-relaxed">
               Aparaitech Software is an enterprise AI software engineering firm and IT solutions provider. MSME Registered.
             </p>
@@ -28,14 +34,13 @@ export default function Footer({ onNavigate }) {
               </span>
             </div>
             <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => handleNav('careers')}
+              <Link
+                to="/careers"
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-secondary/20 hover:bg-secondary text-on-secondary text-xs font-semibold transition-all border border-secondary/40"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>We&apos;re Hiring Engineers &bull; Explore Careers &rarr;</span>
-              </button>
+              </Link>
             </div>
           </div>
           <div className="space-y-4">
@@ -43,24 +48,13 @@ export default function Footer({ onNavigate }) {
               SERVICES
             </h4>
             <ul className="space-y-2.5 font-body-sm text-body-sm">
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Cloud Computing
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Software Development
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                AI & Machine Learning
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                DevOps & CI/CD
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Cybersecurity Solutions
-              </li>
-              <li className="text-on-primary-container hover:text-on-secondary transition-colors cursor-pointer">
-                Mobile App Development
-              </li>
+              {services.map((service) => (
+                <li key={service.slug}>
+                  <Link className="text-on-primary-container hover:text-on-secondary transition-colors" to={`/services/${service.slug}`}>
+                    {service.cardTitle}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="space-y-4">
@@ -68,9 +62,9 @@ export default function Footer({ onNavigate }) {
             <ul className="space-y-2.5 font-body-sm text-body-sm">
               {platforms.map((platform) => (
                 <li key={platform.slug}>
-                  <a className="text-on-primary-container transition-colors hover:text-on-secondary" href="/platforms">
+                  <Link className="text-on-primary-container transition-colors hover:text-on-secondary" to="/platforms">
                     {platform.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
