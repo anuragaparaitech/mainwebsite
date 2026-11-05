@@ -60,7 +60,7 @@ export default function Services() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
-            <span className="inline-flex items-center gap-2 font-mono-tag text-mono-tag font-semibold text-secondary tracking-widest uppercase mb-3">
+            <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
               <span className="w-2 h-0.5 bg-secondary"></span>
               {' '}TECHNICAL CAPABILITIES
             </span>
@@ -70,12 +70,6 @@ export default function Services() {
             <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
               Modular engineering practices purpose-built to accelerate production timetables while neutralizing operational risk.
             </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="font-mono-tag text-mono-tag text-on-surface-variant uppercase">
-              AUDITED DISCIPLINE
-            </span>
-            <span className="w-2 h-2 rounded-full bg-secondary"></span>
           </div>
         </div>
 
@@ -91,7 +85,7 @@ export default function Services() {
                   <div className="w-14 h-14 rounded bg-surface-container-low flex items-center justify-center mb-8 text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
                     {s.icon}
                   </div>
-                  <span className="font-mono-tag text-mono-tag text-secondary font-semibold uppercase tracking-wider block mb-2">
+                  <span className="font-label-caps text-label-caps font-bold text-secondary uppercase tracking-wider block mb-2">
                     {s.tag}
                   </span>
                   <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">{s.title}</h3>

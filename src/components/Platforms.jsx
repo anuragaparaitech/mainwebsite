@@ -70,7 +70,7 @@ export default function Platforms() {
     <section className="w-full bg-surface-container-lowest text-on-surface py-32" id="platforms-section">
       <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
         <div className="mb-16">
-          <span className="inline-flex items-center gap-2 font-mono-tag text-mono-tag font-semibold text-secondary tracking-widest uppercase mb-3">
+          <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
             <span className="w-2 h-0.5 bg-secondary"></span>
             {' '}PROPRIETARY PRODUCT ECOSYSTEM
           </span>
@@ -102,9 +102,9 @@ export default function Platforms() {
                         <span className="material-symbols-outlined text-[20px]">{p.icon}</span>
                       </div>
                       {launched ? (
-                        <span className="font-mono-tag text-mono-tag text-on-surface-variant text-right">{p.tag}</span>
+                        <span className="font-label-caps text-label-caps font-bold text-on-surface-variant text-right tracking-wider uppercase">{p.tag}</span>
                       ) : (
-                        <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-mono-tag text-mono-tag font-bold tracking-wide whitespace-nowrap">
+                        <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-caps text-label-caps font-bold tracking-wide whitespace-nowrap uppercase">
                           To Be Launched
                         </span>
                       )}

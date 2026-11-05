@@ -1,7 +1,7 @@
 import Counter from './Counter';
 import HeroMedia from './HeroMedia';
 
-export default function Hero({ statsRun }) {
+export default function Hero({ statsRun, onOpenEnquiry }) {
   return (
     <section className="relative w-full h-screen min-h-screen text-on-secondary flex flex-col justify-between overflow-hidden">
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0" id="hero-media-wrapper">
@@ -25,14 +25,18 @@ export default function Hero({ statsRun }) {
               layers
             </span>
           </a>
-          <a className="w-full sm:w-auto px-8 py-3.5 rounded bg-surface-container-lowest/15 backdrop-blur-md text-on-secondary font-title-md text-title-md font-semibold hover:bg-surface-container-lowest/25 transition-all flex items-center justify-center gap-2 border border-white/20" href="#">
+          <button
+            type="button"
+            onClick={onOpenEnquiry}
+            className="w-full sm:w-auto px-8 py-3.5 rounded bg-surface-container-lowest/15 backdrop-blur-md text-on-secondary font-title-md text-title-md font-semibold hover:bg-surface-container-lowest/25 transition-all flex items-center justify-center gap-2 border border-white/20 cursor-pointer"
+          >
             <span>
               Customer Enquiry
             </span>
             <span className="material-symbols-outlined text-[20px]">
               arrow_outward
             </span>
-          </a>
+          </button>
         </div>
       </div>
       <div className="relative z-20 max-w-4xl w-full mx-auto px-4 mb-10">

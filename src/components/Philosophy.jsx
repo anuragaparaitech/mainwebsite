@@ -48,7 +48,7 @@ export default function Philosophy() {
     <section className="w-full bg-surface-container-lowest text-on-surface py-32" id="philosophy" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
         <div className="max-w-3xl mb-20">
-          <span className="inline-flex items-center gap-2 font-mono-tag text-mono-tag font-semibold text-secondary tracking-widest uppercase mb-4">
+          <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-4">
             <span className="w-2 h-0.5 bg-secondary"></span>
             {' '}OUR PHILOSOPHY
           </span>
