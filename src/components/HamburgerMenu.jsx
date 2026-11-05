@@ -23,7 +23,7 @@ export default function HamburgerMenu({ open, onClose }) {
             <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="services" href="#services" onClick={onClose}>
               Services
             </a>
-            <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="our-platforms" href="#platforms-section" onClick={onClose}>
+            <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="our-platforms" href="/platforms" onClick={onClose}>
               Our Platforms
             </a>
             <a className="px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md font-semibold transition-colors" data-path="our-team" href="#" onClick={onClose}>

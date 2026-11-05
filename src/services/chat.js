@@ -10,9 +10,9 @@ const RULES = [
       'We deliver three core capabilities: Cloud Solutions (resilient multi-cloud architectures, auto-scaling and migration), Custom Software (tailored enterprise applications engineered for massive scale) and AI & Automation (LLM workflows, conversational bots and data pipelines). See the Services section for details.',
   },
   {
-    test: /(platform|novatax|blastbee|apna|kitchen|service hub|cet|product)/i,
+    test: /(platform|bytalk|student|product)/i,
     reply:
-      'Our live platforms are NovaTax (enterprise tax & compliance), BlastBee (omnichannel messaging), Apna Store (retail OS), Cloud Kitchen OS and Service Hub Web. The CET Test Portal is currently in sandbox testing and marked To Be Launched.',
+      'Our platform catalogue currently includes BYTALK, Student Email Blast, AI-Powered Solutions and Custom Enterprise Platforms. Some product details are still being confirmed; open the Platforms section to review each brief.',
   },
   {
     test: /(human|talk|contact|enquiry|inquiry|call|office|address|reach)/i,

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import Preloader from './components/Preloader';
 import Header from './components/Header';
 import HamburgerMenu from './components/HamburgerMenu';
@@ -25,15 +26,22 @@ export default function App() {
       <Header onOpenMenu={() => setMenuOpen(true)} onOpenDrawer={() => setDrawerOpen(true)} />
       <HamburgerMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
       <ChatDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-      <main className="w-full bg-surface">
-        <div className="flex flex-col w-full">
-          <Preloader onDone={() => setStatsRun(true)} />
-          <Hero statsRun={statsRun} />
-          <Philosophy />
-          <Services />
-          <Platforms />
-        </div>
-      </main>
+      <Routes>
+        <Route path="/platforms" element={<Platforms onOpenDrawer={() => setDrawerOpen(true)} />} />
+        <Route
+          path="*"
+          element={(
+            <main className="w-full bg-surface">
+              <div className="flex flex-col w-full">
+                <Preloader onDone={() => setStatsRun(true)} />
+                <Hero statsRun={statsRun} />
+                <Philosophy />
+                <Services />
+              </div>
+            </main>
+          )}
+        />
+      </Routes>
       <Footer />
     </>
   );
