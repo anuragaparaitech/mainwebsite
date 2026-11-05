@@ -6,7 +6,7 @@ export default function Hero({ statsRun, onOpenEnquiry }) {
     <section className="relative w-full h-screen min-h-screen text-on-secondary flex flex-col justify-between overflow-hidden">
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0" id="hero-media-wrapper">
         <HeroMedia />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/75 via-[#0F172A]/45 to-[#0F172A]/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-container/75 via-primary-container/45 to-primary-container/80"></div>
       </div>
       <div className="relative z-10 w-full pt-28"></div>
       <div className="relative z-10 max-w-[1040px] mx-auto px-4 text-center my-auto flex flex-col items-center">

@@ -10,19 +10,24 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
   const [activeServiceSlug, setActiveServiceSlug] = useState('cloud-solutions');
   const activeService = services.find((service) => service.slug === activeServiceSlug) || services[0];
 
-  const isLightHeader = solid || scrolled || location.pathname !== '/';
+  const isServicesHero = location.pathname === '/services' && !solid && !scrolled;
+  const isLightHeader = solid || scrolled || (location.pathname !== '/' && location.pathname !== '/services');
 
   const navLinkClass = (active) =>
-    active
-      ? 'text-[#2563EB] font-semibold text-sm transition-colors relative py-1'
-      : 'text-[#0F172A] hover:text-[#2563EB] text-sm font-medium transition-colors py-1';
+    active && isLightHeader
+      ? 'text-secondary font-semibold text-sm transition-colors relative py-1'
+      : active
+        ? 'text-white font-semibold text-sm transition-colors relative py-1'
+        : isLightHeader
+          ? 'text-primary-container hover:text-secondary text-sm font-medium transition-colors py-1'
+          : 'text-white/90 hover:text-white text-sm font-medium transition-colors py-1';
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 w-full px-6 lg:px-8 transition-all duration-300 ${
           isLightHeader
-            ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E2E8F0] py-3.5'
+            ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-outline-variant py-3.5'
             : 'bg-transparent py-5'
         }`}
         id="main-header"
@@ -31,7 +36,7 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
           <div className="flex items-center gap-4 lg:gap-5">
             <button
               aria-label="Open navigation menu"
-              className="w-12 h-12 rounded-full flex items-center justify-center bg-white text-[#0F172A] shadow-md hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+              className="w-12 h-12 rounded-full flex items-center justify-center bg-white text-primary-container shadow-md hover:bg-surface-container-low transition-colors focus:outline-none focus:ring-2 focus:ring-secondary"
               onClick={onOpenMenu}
               type="button"
             >
@@ -42,12 +47,16 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
                 size="lg"
                 onDark={!isLightHeader}
                 nameId="brand-wordmark"
-                nameClassName={isLightHeader ? 'text-[#0F172A]' : 'text-white'}
+                nameClassName={isLightHeader ? 'text-primary-container' : 'text-white'}
               />
             </Link>
           </div>
 
-          <nav className="hidden lg:flex items-center gap-7 bg-white/75 backdrop-blur-md rounded-full px-7 py-2.5 shadow-sm border border-white/30">
+          <nav className={`hidden lg:flex items-center gap-7 rounded-full px-7 py-2.5 shadow-sm backdrop-blur-md ${
+            isServicesHero
+              ? 'border border-white/20 bg-white/10'
+              : 'border border-white/30 bg-white/75'
+          }`}>
             {/* Services Dropdown */}
             <div className="services-nav-item relative">
               <Link
@@ -58,36 +67,38 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
               >
                 Services
                 {location.pathname.startsWith('/services') && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary rounded-full"></span>
                 )}
               </Link>
               <div className="services-nav-dropdown absolute left-1/2 top-full z-50 w-[min(90vw,900px)] -translate-x-1/2 pt-4" id="services-nav-dropdown">
-                <div className="grid max-h-[min(75vh,620px)] grid-cols-[minmax(190px,0.38fr)_minmax(0,1fr)] overflow-hidden rounded-xl border border-outline-variant/50 bg-white shadow-2xl">
-                  <ul aria-label="Service categories" className="space-y-1 overflow-y-auto border-r border-outline-variant/40 bg-surface p-3">
-                    {services.map((service) => (
-                      <li key={service.slug}>
-                        <button
-                          aria-pressed={service.slug === activeService.slug}
-                          className={`w-full rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
-                            service.slug === activeService.slug
-                              ? 'bg-secondary text-white'
-                              : 'text-on-surface hover:bg-white hover:text-secondary'
-                          }`}
-                          onFocus={() => setActiveServiceSlug(service.slug)}
-                          onMouseEnter={() => setActiveServiceSlug(service.slug)}
-                          type="button"
-                        >
-                          {service.cardTitle}
-                        </button>
-                      </li>
-                    ))}
-                    <li className="border-t border-outline-variant/40 pt-2">
-                      <Link className="block rounded-md px-3 py-2 text-sm font-semibold text-secondary hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary" to="/services">
-                        View all services →
+                <div className="services-nav-panel grid grid-cols-[minmax(190px,0.38fr)_minmax(0,1fr)] overflow-hidden rounded-xl border border-outline-variant/50 bg-white shadow-2xl">
+                  <div className="flex min-h-0 flex-col border-r border-outline-variant/40 bg-surface">
+                    <ul aria-label="Service categories" className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain p-3">
+                      {services.map((service) => (
+                        <li key={service.slug}>
+                          <button
+                            aria-pressed={service.slug === activeService.slug}
+                            className={`w-full rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
+                              service.slug === activeService.slug
+                                ? 'bg-secondary text-white'
+                                : 'text-on-surface hover:bg-white hover:text-secondary'
+                            }`}
+                            onFocus={() => setActiveServiceSlug(service.slug)}
+                            onMouseEnter={() => setActiveServiceSlug(service.slug)}
+                            type="button"
+                          >
+                            {service.cardTitle}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="shrink-0 border-t border-outline-variant/40 bg-surface p-3">
+                      <Link className="block rounded-md px-3 py-2.5 text-sm font-semibold text-secondary hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary" to="/services">
+                        View all services <span aria-hidden="true">→</span>
                       </Link>
-                    </li>
-                  </ul>
-                  <div className="overflow-y-auto p-5 md:p-6">
+                    </div>
+                  </div>
+                  <div className="min-h-0 overflow-y-auto overscroll-contain p-5 md:p-6">
                     <div className="flex items-start justify-between gap-4 border-b border-outline-variant/40 pb-4">
                       <div>
                         <h2 className="mt-1 text-lg font-bold text-on-surface">{activeService.cardTitle}</h2>
@@ -119,7 +130,7 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
             >
               Our Platforms
               {location.pathname === '/platforms' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary rounded-full"></span>
               )}
             </Link>
 
@@ -129,7 +140,7 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
             >
               Careers
               {location.pathname === '/careers' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary rounded-full"></span>
               )}
             </Link>
 
@@ -139,14 +150,14 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
             >
               Contact Us
               {(location.pathname === '/contact' || location.pathname === '/contact-us') && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-secondary rounded-full"></span>
               )}
             </Link>
           </nav>
 
           <div className="flex items-center">
             <button
-              className="ai-agent-btn-animated inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#2563EB] text-white font-body-sm text-body-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+              className="ai-agent-btn-animated inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-secondary text-white font-body-sm text-body-sm font-semibold focus:outline-none focus:ring-2 focus:ring-secondary"
               onClick={onOpenDrawer}
               type="button"
             >

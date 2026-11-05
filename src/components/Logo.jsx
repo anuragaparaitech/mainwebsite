@@ -29,9 +29,9 @@ export default function Logo({ size = 'lg', onDark = false, nameClassName = '', 
   return (
     <span className={`flex items-center ${s.gap} select-none`}>
       {failed ? (
-        <span className={`${s.badge} bg-[#0F172A] border border-blue-500/30 text-white font-bold tracking-tighter flex items-center justify-center relative shrink-0`}>
+        <span className={`${s.badge} bg-primary-container border border-secondary/30 text-white font-bold tracking-tighter flex items-center justify-center relative shrink-0`}>
           A
-          <span className={`absolute ${s.dot} rounded-full bg-[#2563EB]`} />
+          <span className={`absolute ${s.dot} rounded-full bg-secondary`} />
         </span>
       ) : (
         <img

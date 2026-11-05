@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { services } from '../services/serviceDetails';
+import ServicesCarousel from './ServicesCarousel';
 
 export default function Services({ standalone = false }) {
   const [activeSlug, setActiveSlug] = useState('cloud-solutions');
@@ -10,12 +11,9 @@ export default function Services({ standalone = false }) {
     <section id="services" className={`w-full bg-surface text-on-surface ${standalone ? 'pb-32' : 'py-32'}`}>
       {standalone ? (
         <div className="services-hero">
+          <ServicesCarousel />
           <div className="services-hero-content">
             <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
-                <span className="w-2 h-0.5 bg-secondary"></span>
-                TECHNICAL CAPABILITIES
-              </span>
               <h2 className="font-headline-lg text-headline-lg font-bold text-white tracking-tight">
                 High-Assurance Digital Services
               </h2>
@@ -26,14 +24,10 @@ export default function Services({ standalone = false }) {
           </div>
         </div>
       ) : null}
-      <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
+      <div className={`max-w-[1280px] mx-auto px-4 md:px-gutter-lg ${standalone ? 'pt-8 md:pt-12' : ''}`}>
         {!standalone && (
           <div className="mb-16">
             <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
-                <span className="w-2 h-0.5 bg-secondary"></span>
-                TECHNICAL CAPABILITIES
-              </span>
               <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
                 High-Assurance Digital Services
               </h2>
@@ -53,7 +47,7 @@ export default function Services({ standalone = false }) {
                   className={`flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
                     isActive
                       ? 'border-secondary bg-secondary text-white shadow-sm'
-                      : 'border-outline-variant/50 bg-white text-on-surface hover:border-secondary/50 hover:bg-surface-container-low'
+                      : 'border-outline-variant/50 bg-white text-on-surface hover:border-secondary-fixed hover:bg-secondary-fixed'
                   }`}
                   key={service.slug}
                   onClick={() => setActiveSlug(service.slug)}
@@ -68,7 +62,7 @@ export default function Services({ standalone = false }) {
               );
             })}
           </nav>
-          <section aria-label={`${activeService.cardTitle} industries`} className="min-w-0 rounded-xl border border-outline-variant/50 bg-white p-5 shadow-sm md:p-8">
+          <section aria-label={`${activeService.cardTitle} industries`} className="min-w-0 rounded-xl border border-outline-variant/50 bg-white p-5 shadow-sm md:p-8 lg:flex lg:min-h-[680px] lg:flex-col">
             <div className="flex flex-col gap-5 border-b border-outline-variant/40 pb-6 sm:flex-row sm:items-end sm:justify-between">
               <div className="max-w-2xl">
                 <h3 className="mt-2 text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{activeService.cardTitle}</h3>
@@ -78,11 +72,11 @@ export default function Services({ standalone = false }) {
                 Explore service <span aria-hidden="true">→</span>
               </Link>
             </div>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3 lg:flex-1 lg:auto-rows-fr">
               {activeService.industryUseCases.map(({ industry, description }) => (
                 <Link
                   aria-label={`${industry}: ${description}. Explore ${activeService.cardTitle}`}
-                  className="group rounded-lg border border-outline-variant/40 bg-surface p-4 transition-colors hover:border-secondary/50 hover:bg-secondary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                  className="group flex flex-col justify-center rounded-lg border border-outline-variant/40 bg-surface p-4 transition-all duration-200 hover:border-secondary-fixed hover:bg-secondary-fixed hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                   key={industry}
                   to={`/services/${activeService.slug}`}
                 >

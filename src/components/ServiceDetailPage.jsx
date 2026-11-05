@@ -60,7 +60,7 @@ export default function ServiceDetailPage({ slug: serviceSlug }) {
               </div>
             </div>
             {service.image && (
-              <div className="overflow-hidden rounded-xl border border-outline-variant/50 bg-white shadow-sm">
+              <div className="overflow-hidden rounded-xl border border-outline-variant/50 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg">
                 <img
                   alt={service.imageAlt}
                   className="aspect-[3/2] w-full object-cover"
@@ -99,14 +99,18 @@ export default function ServiceDetailPage({ slug: serviceSlug }) {
       <section className="px-6 py-20 md:py-24 bg-white border-y border-outline-variant/30">
         <div className="max-w-[1200px] mx-auto">
           <SectionHeading title="A clear path from idea to impact" description="Our delivery process keeps decisions visible and progress grounded in your business priorities." />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <ol className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
             {service.process.map(([step, detail]) => (
-              <article className="rounded-lg border border-outline-variant/50 p-6" key={step}>
+              <li className="border-t border-outline-variant/60 pt-5" key={step}>
                 <h3 className="text-xl font-bold">{step}</h3>
-                <p className="mt-3 leading-relaxed text-on-surface-variant">{detail}</p>
-              </article>
+                <ul className="mt-3">
+                  <li className="relative pl-4 leading-relaxed text-on-surface-variant before:absolute before:left-0 before:top-[0.7em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-on-surface">
+                    {detail}
+                  </li>
+                </ul>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 

@@ -48,8 +48,8 @@ export default function Careers({ onBackToHome }) {
             className="w-full h-full object-cover object-center"
           />
           {/* Subtle multi-layer gradient overlays for text readability & brand coherence */}
-          <div className="absolute inset-0 bg-[#0B132B]/80 via-[#0F172A]/75 to-[#0B132B]/90"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B132B]/95 via-[#0B132B]/75 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-container/90 via-primary-container/75 to-primary-container/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-container/95 via-primary-container/75 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-black/30"></div>
         </div>
 

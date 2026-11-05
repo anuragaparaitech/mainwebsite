@@ -73,7 +73,7 @@ export default function Philosophy() {
                     >
                       {p.number}
                     </span>
-                    <span className="material-symbols-outlined text-secondary text-[28px]">{p.icon}</span>
+                    <span className="material-symbols-outlined text-tertiary text-[28px]">{p.icon}</span>
                   </div>
                   <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-4">{p.title}</h3>
                   <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">{p.description}</p>

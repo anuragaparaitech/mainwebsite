@@ -71,7 +71,7 @@ export default function ContactUs({ onBackToHome, onOpenEnquiry }) {
   return (
     <div className="w-full bg-surface text-on-surface">
       {/* Hero Section with Custom Background Image */}
-      <section className="relative w-full pt-32 pb-24 md:pt-40 md:pb-32 text-white overflow-hidden bg-[#0A101D]">
+      <section className="relative w-full pt-32 pb-24 md:pt-40 md:pb-32 text-white overflow-hidden bg-primary-container">
         {/* Full Unclipped Background Image with High Photographic Clarity */}
         <div className="absolute inset-0 z-0">
           <img
@@ -80,8 +80,8 @@ export default function ContactUs({ onBackToHome, onOpenEnquiry }) {
             className="w-full h-full object-cover object-right md:object-center"
           />
           {/* Subtle transparent gradient on the left side only to protect text contrast while keeping the desk, headset, blocks, and background clear and unblurred */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0A101D]/85 via-[#0A101D]/35 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A101D]/60 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-container/85 via-primary-container/35 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-container/60 via-transparent to-transparent"></div>
         </div>
 
         <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg relative z-10">
