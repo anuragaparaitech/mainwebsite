@@ -65,10 +65,6 @@ html { scroll-behavior: smooth; }
   }
 }
 
-.services-nav-dropdown { display: none; }
-.services-nav-item:hover .services-nav-dropdown,
-.services-nav-item:focus-within .services-nav-dropdown { display: block; }
-
 /* Staggered slide-up reveal for the Philosophy cards (UI plan: translateY 40px -> 0, 150ms steps) */
 .reveal-item { opacity: 0; }
 .is-visible .reveal-item {

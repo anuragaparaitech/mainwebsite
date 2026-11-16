@@ -59,11 +59,12 @@ export default function App() {
                 <Hero statsRun={statsRun} onOpenEnquiry={() => setEnquiryOpen(true)} />
                 <Philosophy />
                 <Services />
+                <Platforms onOpenDrawer={() => setDrawerOpen(true)} />
               </div>
             </main>
           )}
         />
-        <Route path="/platforms" element={<Platforms onOpenDrawer={() => setDrawerOpen(true)} />} />
+        <Route path="/platforms" element={<Platforms standalone onOpenDrawer={() => setDrawerOpen(true)} />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/services/cloud-solutions" element={<CloudSolutionsPage />} />
         <Route path="/services/custom-software-development" element={<CustomSoftwareDevelopmentPage />} />
