@@ -25,7 +25,7 @@ const PILLARS = [
     title: 'Global Standards, Local Agility',
     description:
       'Enterprise-grade security, compliance, and cloud resiliency combined with nimble, fast-paced turnaround times. Governed under ISO 27001 data sovereignty while deploying weekly sprint cadence.',
-    footer: 'ISO 27001 • SOC 2 TYPE II PREPARED',
+    
     highlight: true, // middle card: tinted background, blue number and footer
   },
   {
@@ -45,14 +45,14 @@ const PILLARS = [
 export default function Philosophy() {
   const ref = useReveal();
   return (
-    <section className="w-full bg-surface-container-lowest text-on-surface py-32" id="philosophy" ref={ref}>
+    <section className="w-full bg-surface-container-lowest dark:bg-[#070e1c] text-on-surface dark:text-white py-24 sm:py-32 transition-colors duration-300" id="philosophy" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
-        <div className="max-w-3xl mb-20">
-          <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-4">
-            <span className="w-2 h-0.5 bg-secondary"></span>
+        <div className="max-w-3xl mb-16 sm:mb-20">
+          <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary dark:text-blue-400 tracking-widest uppercase mb-4">
+            <span className="w-2 h-0.5 bg-secondary dark:bg-blue-400"></span>
             {' '}OUR PHILOSOPHY
           </span>
-          <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight leading-tight">
+          <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface dark:text-white tracking-tight leading-tight">
             We Believe Technology Should Drive Your Business, Not Slow It Down.
           </h2>
         </div>
@@ -61,28 +61,36 @@ export default function Philosophy() {
           {PILLARS.map((p, i) => (
             <div
               key={p.number}
-              className={`${p.highlight ? 'bg-surface-container-low' : 'bg-surface-container-lowest'} rounded-lg flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-shadow reveal-item group`}
+              className={`${
+                p.highlight
+                  ? 'bg-surface-container-low dark:bg-[#0e2042] border-blue-300/40 dark:border-blue-500/30'
+                  : 'bg-surface-container-lowest dark:bg-[#0c1830] border-slate-200/80 dark:border-white/10'
+              } rounded-2xl border flex flex-col overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 reveal-item group`}
               style={{ '--i': i }}
             >
               <CardImage src={p.image} alt={p.alt} icon={p.fallbackIcon} className="h-48 w-full shrink-0" />
               <div className="p-8 md:p-10 flex flex-col justify-between flex-1">
                 <div>
-                  <div className="flex items-center justify-between mb-8 pb-4">
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-white/10">
                     <span
-                      className={`font-display-hero text-headline-lg font-bold font-mono-code ${p.highlight ? 'text-secondary' : 'text-outline-variant/60'}`}
+                      className={`font-display-hero text-headline-lg font-bold font-mono-code ${
+                        p.highlight ? 'text-secondary dark:text-blue-400' : 'text-outline-variant/60 dark:text-slate-500'
+                      }`}
                     >
                       {p.number}
                     </span>
-                    <span className="material-symbols-outlined text-secondary text-[28px]">{p.icon}</span>
+                    <span className="material-symbols-outlined text-secondary dark:text-blue-400 text-[28px]">{p.icon}</span>
                   </div>
-                  <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-4">{p.title}</h3>
-                  <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">{p.description}</p>
+                  <h3 className="font-title-md text-headline-sm font-bold text-on-surface dark:text-white mb-4">{p.title}</h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-300 leading-relaxed">{p.description}</p>
                 </div>
                 <div
-                  className={`mt-8 pt-4 flex items-center gap-2 font-mono-tag text-mono-tag ${p.highlight ? 'text-secondary font-semibold' : 'text-on-surface-variant'}`}
+                  className={`mt-8 pt-4 flex items-center gap-2 font-mono-tag text-mono-tag ${
+                    p.highlight ? 'text-secondary dark:text-blue-400 font-semibold' : 'text-on-surface-variant dark:text-slate-400'
+                  }`}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                  <span>{p.footer}</span>
+                  {/* <span className="w-1.5 h-1.5 rounded-full bg-secondary dark:bg-blue-400"></span>
+                  <span>{p.footer}</span> */}
                 </div>
               </div>
             </div>

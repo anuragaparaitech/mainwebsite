@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useEscape from '../hooks/useEscape';
 import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
+import { ABOUT_NAV_OPTIONS } from './Header';
 import { services } from '../services/serviceDetails';
 
 export default function HamburgerMenu({ open, onClose }) {
@@ -9,6 +11,7 @@ export default function HamburgerMenu({ open, onClose }) {
   const location = useLocation();
 
   const [servicesExpanded, setServicesExpanded] = useState(false);
+  const [aboutExpanded, setAboutExpanded] = useState(false);
   const [activeCategorySlug, setActiveCategorySlug] = useState(null);
 
   useEffect(() => {
@@ -16,6 +19,7 @@ export default function HamburgerMenu({ open, onClose }) {
       document.querySelector('#mobile-menu button')?.focus();
     } else {
       setServicesExpanded(false);
+      setAboutExpanded(false);
       setActiveCategorySlug(null);
     }
   }, [open]);
@@ -166,9 +170,69 @@ export default function HamburgerMenu({ open, onClose }) {
             <Link className={linkClass('/careers')} to="/careers" onClick={onClose}>
               Careers
             </Link>
-            <Link className={linkClass('/contact')} to="/contact" onClick={onClose}>
-              Contact Us
-            </Link>
+            {/* About Aparaitech with Collapsible Accordion */}
+            <div className="flex flex-col">
+              <div
+                className={`flex items-center justify-between rounded transition-colors ${
+                  location.pathname.startsWith('/about') || location.pathname.startsWith('/contact')
+                    ? 'bg-secondary-fixed text-secondary'
+                    : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
+                }`}
+              >
+                <Link
+                  className="flex-1 px-4 py-3 font-body-md text-body-md font-semibold"
+                  to="/about"
+                  onClick={onClose}
+                >
+                  About Aparaitech
+                </Link>
+                <button
+                  type="button"
+                  aria-expanded={aboutExpanded}
+                  aria-label="Toggle About Aparaitech List"
+                  className="px-4 py-3 text-slate-500 hover:text-[#2563EB] focus:outline-none"
+                  onClick={() => setAboutExpanded(!aboutExpanded)}
+                >
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      aboutExpanded ? 'rotate-180 text-[#2563EB]' : ''
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+
+              {aboutExpanded && (
+                <div className="mt-2 pl-4 pr-1 space-y-2 border-l-2 border-slate-200 dark:border-white/10">
+                  {ABOUT_NAV_OPTIONS.map((opt) => (
+                    <Link
+                      key={opt.title}
+                      to={opt.path}
+                      onClick={onClose}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-[17px] text-[#2563EB]">
+                        {opt.icon}
+                      </span>
+                      <span>{opt.title}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Theme Toggle within Mobile Navigation Menu */}
+            <div className="pt-4 mt-2 border-t border-outline-variant/30">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 font-mono-tag">
+                Appearance &amp; Theme
+              </p>
+              <ThemeToggle variant="menu" />
+            </div>
           </nav>
         </div>
       </div>

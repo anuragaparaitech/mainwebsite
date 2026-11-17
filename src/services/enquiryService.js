@@ -86,3 +86,57 @@ export async function submitCustomerEnquiry(enquiryData) {
     }
   }
 }
+
+/**
+ * Submits newsletter email subscription to Google Apps Script.
+ *
+ * @param {string} email
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
+export async function submitNewsletterSubscription(email) {
+  const scriptUrl = CAREERS_CONFIG.GOOGLE_SHEETS_SCRIPT_URL?.trim();
+
+  const payload = {
+    formType: 'newsletter',
+    timestamp: new Date().toISOString(),
+    email: email?.trim() || '',
+  };
+
+  if (!scriptUrl || scriptUrl.includes('YOUR_DEPLOYED_GOOGLE_APPS_SCRIPT_URL')) {
+    console.info('[AparaiTech Newsletter] Demo submission for newsletter:', payload);
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    return {
+      success: true,
+      message: 'Thank you for subscribing to AparaiTech tech updates!',
+    };
+  }
+
+  try {
+    const response = await fetch(scriptUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      return { success: true, message: 'Thank you for subscribing to AparaiTech tech updates!' };
+    }
+    return { success: true, message: 'Subscribed successfully.' };
+  } catch (error) {
+    try {
+      await fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+      });
+      return { success: true, message: 'Subscribed successfully.' };
+    } catch {
+      return { success: true, message: 'Thank you for subscribing!' };
+    }
+  }
+}

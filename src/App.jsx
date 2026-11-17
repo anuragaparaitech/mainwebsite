@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import Preloader from './components/Preloader';
 import Header from './components/Header';
 import HamburgerMenu from './components/HamburgerMenu';
 import ChatDrawer from './components/ChatDrawer';
 import Hero from './components/Hero';
+import NewsTicker from './components/NewsTicker';
 import Philosophy from './components/Philosophy';
 import Services from './components/Services';
 import Platforms from './components/Platforms';
 import Careers from './components/Careers';
+import AboutAparaitech from './components/AboutAparaitech';
 import ContactUs from './components/ContactUs';
 import EnquiryModal from './components/EnquiryModal';
 import Footer from './components/Footer';
@@ -40,7 +43,7 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <ThemeProvider>
       <Header
         solid={location.pathname !== '/' && location.pathname !== '/services'}
         onOpenMenu={() => setMenuOpen(true)}
@@ -57,6 +60,8 @@ export default function App() {
               <div className="flex flex-col w-full">
                 <Preloader onDone={() => setStatsRun(true)} />
                 <Hero statsRun={statsRun} onOpenEnquiry={() => setEnquiryOpen(true)} />
+                {/* 2. Moving News Headlines / Announcement Ticker immediately ABOVE Our Philosophy */}
+                <NewsTicker />
                 <Philosophy />
                 <Services />
                 <Platforms onOpenDrawer={() => setDrawerOpen(true)} />
@@ -75,12 +80,20 @@ export default function App() {
         <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="/careers" element={<Careers onBackToHome={() => window.location.href = '/'} />} />
         <Route
+          path="/about"
+          element={<AboutAparaitech onBackToHome={() => window.location.href = '/'} />}
+        />
+        <Route
+          path="/about-us"
+          element={<AboutAparaitech onBackToHome={() => window.location.href = '/'} />}
+        />
+        <Route
           path="/contact"
-          element={<ContactUs onBackToHome={() => window.location.href = '/'} onOpenEnquiry={() => setEnquiryOpen(true)} />}
+          element={<AboutAparaitech onBackToHome={() => window.location.href = '/'} />}
         />
         <Route
           path="/contact-us"
-          element={<ContactUs onBackToHome={() => window.location.href = '/'} onOpenEnquiry={() => setEnquiryOpen(true)} />}
+          element={<AboutAparaitech onBackToHome={() => window.location.href = '/'} />}
         />
         <Route
           path="*"
@@ -98,6 +111,6 @@ export default function App() {
 
       <Footer />
       <EnquiryModal isOpen={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
-    </>
+    </ThemeProvider>
   );
 }

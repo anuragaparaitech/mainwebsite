@@ -79,7 +79,7 @@ export default function Services({ standalone = false }) {
           {KEY_SERVICES.map((service) => (
             <div
               key={service.slug}
-              className="group flex flex-col bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              className="group flex flex-col bg-white dark:bg-[#0c1830] rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
             >
               {/* Prominent Service Image */}
               <Link to={service.link} className="block overflow-hidden relative" tabIndex={-1} aria-hidden="true">
@@ -95,26 +95,26 @@ export default function Services({ standalone = false }) {
               <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between">
                 <div>
                   <div className="flex items-center gap-2.5 mb-3">
-                    <span className="w-8 h-8 rounded-lg bg-blue-50 text-secondary flex items-center justify-center shrink-0">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/20 text-secondary dark:text-blue-400 flex items-center justify-center shrink-0">
                       <span className="material-symbols-outlined text-[19px]">{service.icon}</span>
                     </span>
                     <Link
                       to={service.link}
-                      className="text-xl sm:text-[22px] font-bold text-on-surface tracking-tight group-hover:text-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
+                      className="text-xl sm:text-[22px] font-bold text-on-surface dark:text-white tracking-tight group-hover:text-secondary dark:group-hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
                     >
                       {service.title}
                     </Link>
                   </div>
-                  <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                  <p className="text-sm sm:text-base text-on-surface-variant dark:text-slate-300 leading-relaxed">
                     {service.description}
                   </p>
                 </div>
 
                 {/* Subtle Explore Service Link */}
-                <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-6 mt-6 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
                   <Link
                     to={service.link}
-                    className="inline-flex items-center gap-2 text-sm sm:text-[15px] font-semibold text-secondary hover:text-blue-700 transition-colors group/link focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
+                    className="inline-flex items-center gap-2 text-sm sm:text-[15px] font-semibold text-secondary dark:text-blue-400 hover:text-blue-700 dark:hover:text-cyan-300 transition-colors group/link focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
                   >
                     <span>Explore Service</span>
                     <span

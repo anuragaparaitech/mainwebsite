@@ -81,4 +81,152 @@ html { scroll-behavior: smooth; }
   .reveal-item { opacity: 1; }
   .is-visible .reveal-item { animation: none; }
   .ai-agent-btn-animated { animation: none; }
+  .animate-ticker { animation: none !important; overflow-x: auto; }
+}
+
+/* ========================================================================= */
+/* THEME TRANSITION & COMPREHENSIVE DARK MODE SYSTEM                        */
+/* ========================================================================= */
+
+/* Smooth CSS transition across the entire page when switching themes */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #070e1c;
+  color: #f1f5f9;
+}
+
+html.dark main {
+  background-color: #070e1c;
+}
+
+/* Semantic surfaces in dark mode */
+html.dark .bg-surface {
+  background-color: #070e1c;
+}
+
+html.dark .bg-surface-container-lowest {
+  background-color: #0b172e;
+}
+
+html.dark .bg-surface-container-low {
+  background-color: #0e1e3b;
+}
+
+html.dark .bg-surface-container {
+  background-color: #122242;
+}
+
+html.dark .text-on-surface {
+  color: #f8fafc;
+}
+
+html.dark .text-on-surface-variant {
+  color: #94a3b8;
+}
+
+html.dark .border-outline-variant\/20,
+html.dark .border-outline-variant\/30 {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Common cards & containers in dark mode */
+html.dark .bg-white {
+  background-color: #0d1b34;
+}
+
+html.dark .border-slate-200,
+html.dark .border-slate-200\/80,
+html.dark .border-slate-200\/90,
+html.dark .border-slate-100 {
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+html.dark .text-slate-900,
+html.dark .text-\[\#0F172A\],
+html.dark .text-\[\#10233f\] {
+  color: #f8fafc;
+}
+
+html.dark .text-slate-700,
+html.dark .text-slate-600 {
+  color: #cbd5e1;
+}
+
+html.dark .text-slate-500 {
+  color: #94a3b8;
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/70 {
+  background-color: #0a1528;
+}
+
+html.dark .bg-blue-50 {
+  background-color: rgba(37, 99, 235, 0.18);
+}
+
+html.dark .bg-\[\#f8f9fc\] {
+  background-color: #070e1c;
+}
+
+html.dark .bg-\[\#f5f8ff\],
+html.dark .bg-\[\#f5f8fd\] {
+  background-color: #0b1830;
+}
+
+/* Header in dark mode */
+html.dark #main-header.bg-white\/95 {
+  background-color: rgba(7, 14, 28, 0.94);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+}
+
+html.dark nav.bg-white\/75 {
+  background-color: rgba(13, 27, 52, 0.85);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Form inputs in dark mode */
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark select,
+html.dark textarea {
+  background-color: rgba(15, 23, 42, 0.6);
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: rgba(148, 163, 184, 0.55);
+}
+
+/* ========================================================================= */
+/* CONTINUOUS MOVING NEWS TICKER KEYFRAMES                                   */
+/* ========================================================================= */
+@keyframes ticker-scroll {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
 }

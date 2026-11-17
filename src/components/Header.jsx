@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import useScrolled from '../hooks/useScrolled';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
 import { services } from '../services/serviceDetails';
 
 // Arrange existing services into 3 desktop columns (BNY reference design structure):
@@ -26,22 +27,60 @@ const tabletColumns = [
   services.slice(6),
 ];
 
+// About Aparaitech Dropdown Options (5 sections)
+export const ABOUT_NAV_OPTIONS = [
+  {
+    title: 'About Company',
+    desc: 'Vision, mission & institutional background',
+    path: '/about#about-company',
+    icon: 'business',
+  },
+  {
+    title: 'Company Principles',
+    desc: '6 foundational engineering & delivery tenets',
+    path: '/about#company-principles',
+    icon: 'verified',
+  },
+  {
+    title: 'Terms & Conditions',
+    desc: 'Commercial SLAs, governance & policies',
+    path: '/about#terms-conditions',
+    icon: 'description',
+  },
+  {
+    title: 'Our Team',
+    desc: 'Cross-functional architecture & engineering pods',
+    path: '/about#our-team',
+    icon: 'groups',
+  },
+  {
+    title: 'Contact Details',
+    desc: 'Official Pune headquarters, phone & emails',
+    path: '/about#contact-details',
+    icon: 'contact_support',
+  },
+];
+
 export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
   const scrolled = useScrolled(50);
   const location = useLocation();
 
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [openAccordionSlug, setOpenAccordionSlug] = useState(null);
 
   const closeTimerRef = useRef(null);
+  const aboutCloseTimerRef = useRef(null);
   const headerRef = useRef(null);
   const servicesTriggerRef = useRef(null);
+  const aboutTriggerRef = useRef(null);
 
   const handleOpenMenu = () => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
     }
+    setIsAboutOpen(false);
     setIsServicesOpen(true);
   };
 
@@ -59,7 +98,38 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
     }
+    if (aboutCloseTimerRef.current) {
+      clearTimeout(aboutCloseTimerRef.current);
+      aboutCloseTimerRef.current = null;
+    }
     setIsServicesOpen(false);
+    setIsAboutOpen(false);
+  };
+
+  const handleOpenAbout = () => {
+    if (aboutCloseTimerRef.current) {
+      clearTimeout(aboutCloseTimerRef.current);
+      aboutCloseTimerRef.current = null;
+    }
+    setIsServicesOpen(false);
+    setIsAboutOpen(true);
+  };
+
+  const handleScheduleAboutClose = () => {
+    if (aboutCloseTimerRef.current) {
+      clearTimeout(aboutCloseTimerRef.current);
+    }
+    aboutCloseTimerRef.current = setTimeout(() => {
+      setIsAboutOpen(false);
+    }, 180);
+  };
+
+  const handleImmediateAboutClose = () => {
+    if (aboutCloseTimerRef.current) {
+      clearTimeout(aboutCloseTimerRef.current);
+      aboutCloseTimerRef.current = null;
+    }
+    setIsAboutOpen(false);
   };
 
   // Close when pathname changes
@@ -76,9 +146,14 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
     };
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isServicesOpen) {
-        handleImmediateClose();
-        servicesTriggerRef.current?.focus();
+      if (e.key === 'Escape') {
+        if (isServicesOpen) {
+          handleImmediateClose();
+          servicesTriggerRef.current?.focus();
+        } else if (isAboutOpen) {
+          handleImmediateClose();
+          aboutTriggerRef.current?.focus();
+        }
       }
     };
 
@@ -88,10 +163,11 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
       document.removeEventListener('mousedown', handleOutsideClick);
       document.removeEventListener('keydown', handleKeyDown);
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      if (aboutCloseTimerRef.current) clearTimeout(aboutCloseTimerRef.current);
     };
-  }, [isServicesOpen]);
+  }, [isServicesOpen, isAboutOpen]);
 
-  const isLightHeader = solid || scrolled || location.pathname !== '/' || isServicesOpen;
+  const isLightHeader = solid || scrolled || location.pathname !== '/' || isServicesOpen || isAboutOpen;
 
   const navLinkClass = (active) =>
     active
@@ -129,7 +205,7 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
                 size="lg"
                 onDark={!isLightHeader}
                 nameId="brand-wordmark"
-                nameClassName={isLightHeader ? 'text-[#0F172A]' : 'text-white'}
+                nameClassName={isLightHeader ? 'text-[#0F172A] dark:text-white' : 'text-white'}
               />
             </Link>
           </div>
@@ -201,27 +277,119 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
               )}
             </Link>
 
-            <Link
-              className={navLinkClass(location.pathname === '/contact' || location.pathname === '/contact-us')}
-              to="/contact"
-              onClick={handleImmediateClose}
+            {/* About Aparaitech Dropdown Menu Trigger */}
+            <div
+              className="relative"
+              onMouseEnter={handleOpenAbout}
+              onMouseLeave={handleScheduleAboutClose}
             >
-              Contact Us
-              {(location.pathname === '/contact' || location.pathname === '/contact-us') && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
-              )}
-            </Link>
+              <Link
+                ref={aboutTriggerRef}
+                to="/about"
+                aria-controls="about-dropdown-menu"
+                aria-haspopup="true"
+                aria-expanded={isAboutOpen}
+                className={navLinkClass(
+                  location.pathname.startsWith('/about') ||
+                    location.pathname.startsWith('/contact') ||
+                    isAboutOpen
+                )}
+                onFocus={handleOpenAbout}
+                onClick={() => {
+                  if (!isAboutOpen) {
+                    handleOpenAbout();
+                  } else {
+                    handleImmediateAboutClose();
+                  }
+                }}
+              >
+                <span className="inline-flex items-center gap-1.5">
+                  <span>About Aparaitech</span>
+                  <svg
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      isAboutOpen ? 'rotate-180 text-[#2563EB]' : 'text-slate-400'
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+                {(location.pathname.startsWith('/about') ||
+                  location.pathname.startsWith('/contact') ||
+                  isAboutOpen) && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+                )}
+              </Link>
+
+              {/* About Aparaitech Dropdown Menu */}
+              <div
+                id="about-dropdown-menu"
+                role="menu"
+                aria-label="About Aparaitech Menu"
+                className={`absolute top-full right-0 w-72 sm:w-80 pt-3 transition-all duration-200 ease-out z-50 ${
+                  isAboutOpen
+                    ? 'opacity-100 translate-y-0 pointer-events-auto visible'
+                    : 'opacity-0 -translate-y-2 pointer-events-none invisible'
+                }`}
+              >
+                {/* Hit bridge */}
+                <div className="absolute -top-3 left-0 right-0 h-4 bg-transparent" aria-hidden="true" />
+
+                <div className="bg-white dark:bg-[#0c1830] rounded-2xl shadow-[0_20px_50px_-10px_rgba(0,0,0,0.18)] border border-slate-200/90 dark:border-white/10 p-3 overflow-hidden">
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-white/10 mb-1 flex items-center justify-between">
+                    <span className="text-[11px] font-mono-tag font-bold uppercase tracking-wider text-slate-400">
+                      About Aparaitech
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/20 text-[#2563EB] dark:text-blue-400 font-semibold font-mono-tag">
+                      5 SECTIONS
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    {ABOUT_NAV_OPTIONS.map((opt) => (
+                      <Link
+                        key={opt.title}
+                        to={opt.path}
+                        onClick={handleImmediateAboutClose}
+                        className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors group/item"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/20 text-[#2563EB] dark:text-blue-400 flex items-center justify-center shrink-0 group-hover/item:scale-105 transition-transform">
+                          <span className="material-symbols-outlined text-[18px]">
+                            {opt.icon}
+                          </span>
+                        </span>
+                        <div>
+                          <p className="text-sm font-bold text-slate-900 dark:text-white group-hover/item:text-[#2563EB] dark:group-hover/item:text-blue-400 transition-colors leading-snug">
+                            {opt.title}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
+                            {opt.desc}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </nav>
 
-          {/* AI Agent Drawer Trigger Button */}
-          <div className="flex items-center">
+          {/* Header Right Actions: Theme Toggle & AI Agent Drawer Trigger Button */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <ThemeToggle />
+
             <button
-              className="ai-agent-btn-animated inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#2563EB] text-white font-body-sm text-body-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+              className="ai-agent-btn-animated inline-flex items-center gap-2 sm:gap-2.5 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#2563EB] text-white font-body-sm text-body-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
               onClick={onOpenDrawer}
               type="button"
             >
-              <span className="material-symbols-outlined text-[20px] ai-icon">smart_toy</span>
-              <span>Ask AI Agent</span>
+              <span className="material-symbols-outlined text-[19px] sm:text-[20px] ai-icon">smart_toy</span>
+              <span className="hidden xs:inline sm:inline">Ask AI Agent</span>
+              <span className="xs:hidden sm:hidden">AI</span>
             </button>
           </div>
         </div>
