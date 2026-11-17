@@ -1,25 +1,127 @@
+import { useState } from 'react';
 import Logo from './Logo';
 import { Link } from 'react-router-dom';
 import { platforms } from '../data/platforms';
 import { services } from '../services/serviceDetails';
+import { submitCustomerEnquiry } from '../services/enquiryService';
+
+const ENQUIRY_SERVICES = [
+  'Cloud Solutions',
+  'Custom Software Development',
+  'AI & Machine Learning',
+  'DevOps & CI/CD',
+  'Cybersecurity & Compliance',
+  'Mobile App Development',
+  'SaaS Product Engineering',
+  'Data Analytics & BI',
+  'Enterprise IT Consulting',
+  'UI/UX Design',
+  'Digital Portfolios & Bios',
+  'Other',
+];
 
 export default function Footer({ onNavigate }) {
-  const handleNav = (view, sectionId) => {
-    if (onNavigate) {
-      onNavigate(view, sectionId);
-    } else if (view === 'careers') {
-      window.location.href = '/careers';
-    } else if (sectionId) {
-      window.location.href = `/#${sectionId}`;
-    } else {
-      window.location.href = '/';
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    service: '',
+    message: '',
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full Name is required';
+    } else if (formData.fullName.trim().length < 2) {
+      newErrors.fullName = 'Please enter a valid name';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Work Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = 'Please enter a valid work email';
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone Number is required';
+    } else if (!/^[\d\s+\-()]{7,18}$/.test(formData.phone.trim())) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+
+    if (!formData.service) {
+      newErrors.service = 'Please select a service';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Please provide at least 10 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitStatus(null);
+    setStatusMessage('');
+
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await submitCustomerEnquiry({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        message: formData.message,
+      });
+
+      if (res && res.success) {
+        setSubmitStatus('success');
+        setStatusMessage(res.message || 'Thank you! Your enquiry has been sent successfully. We will contact you shortly.');
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          service: '',
+          message: '',
+        });
+        setErrors({});
+      } else {
+        setSubmitStatus('error');
+        setStatusMessage(res?.message || 'Submission failed. Please email contact@aparaitech.com directly.');
+      }
+    } catch (err) {
+      setSubmitStatus('error');
+      setStatusMessage(err.message || 'Unable to submit enquiry. Please check your network or try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <footer id="footer" className="w-full bg-primary-container text-on-primary-container pt-16 pb-12 border-t border-outline-variant/20">
       <div className="max-w-[1440px] mx-auto px-4 md:px-gutter-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-16 items-start">
+          {/* Column 1: Company Info + Enquiry Form */}
           <div className="space-y-4">
             <Link to="/" className="text-left inline-block">
               <Logo size="sm" onDark nameClassName="text-on-secondary" />
@@ -27,13 +129,13 @@ export default function Footer({ onNavigate }) {
             <p className="font-body-sm text-body-sm text-on-primary-container leading-relaxed">
               Aparaitech Software is an enterprise AI software engineering firm and IT solutions provider. MSME Registered.
             </p>
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span className="font-mono-tag text-mono-tag text-on-primary-container">
-                All Systems Operational • Mutual NDA Protected
+                All Systems Operational &bull; Mutual NDA Protected
               </span>
             </div>
-            <div className="pt-2">
+            <div className="pt-1">
               <Link
                 to="/careers"
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-secondary/20 hover:bg-secondary text-on-secondary text-xs font-semibold transition-all border border-secondary/40"
@@ -42,7 +144,150 @@ export default function Footer({ onNavigate }) {
                 <span>We&apos;re Hiring Engineers &bull; Explore Careers &rarr;</span>
               </Link>
             </div>
+
+            {/* Embedded Enquiry Form */}
+            <div className="pt-4 mt-3 border-t border-white/10">
+              <div className="mb-3.5">
+                <h4 className="text-sm font-bold text-white tracking-wide">
+                  Have a Project in Mind?
+                </h4>
+                <p className="text-xs text-on-primary-container mt-0.5 leading-relaxed">
+                  Let&apos;s discuss how we can help you with the right technology solutions.
+                </p>
+              </div>
+
+              {submitStatus === 'success' ? (
+                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs">
+                  <div className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-emerald-400 shrink-0">check_circle</span>
+                    <div>
+                      <p className="font-semibold text-emerald-200">Enquiry Sent Successfully!</p>
+                      <p className="mt-1 leading-relaxed opacity-90">{statusMessage}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSubmitStatus(null)}
+                    className="mt-3 text-[11px] font-semibold text-emerald-400 hover:underline inline-block"
+                  >
+                    Send another enquiry &rarr;
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate className="space-y-2.5">
+                  {submitStatus === 'error' && (
+                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-start gap-2">
+                      <span className="material-symbols-outlined text-[16px] text-red-400 shrink-0 mt-0.5">error</span>
+                      <p className="leading-relaxed">{statusMessage}</p>
+                    </div>
+                  )}
+
+                  {/* 1. Full Name */}
+                  <div>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      placeholder="Full Name *"
+                      className={`w-full px-3 py-2 rounded-lg bg-white/5 border ${
+                        errors.fullName ? 'border-red-400/80 ring-1 ring-red-400/40' : 'border-white/10 hover:border-white/20 focus:border-[#2563EB]'
+                      } text-white placeholder:text-white/40 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#2563EB] transition-colors`}
+                    />
+                    {errors.fullName && <p className="text-red-400 text-[11px] mt-0.5 pl-1">{errors.fullName}</p>}
+                  </div>
+
+                  {/* 2. Work Email */}
+                  <div>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Work Email *"
+                      className={`w-full px-3 py-2 rounded-lg bg-white/5 border ${
+                        errors.email ? 'border-red-400/80 ring-1 ring-red-400/40' : 'border-white/10 hover:border-white/20 focus:border-[#2563EB]'
+                      } text-white placeholder:text-white/40 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#2563EB] transition-colors`}
+                    />
+                    {errors.email && <p className="text-red-400 text-[11px] mt-0.5 pl-1">{errors.email}</p>}
+                  </div>
+
+                  {/* 3. Phone Number */}
+                  <div>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="Phone Number *"
+                      className={`w-full px-3 py-2 rounded-lg bg-white/5 border ${
+                        errors.phone ? 'border-red-400/80 ring-1 ring-red-400/40' : 'border-white/10 hover:border-white/20 focus:border-[#2563EB]'
+                      } text-white placeholder:text-white/40 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#2563EB] transition-colors`}
+                    />
+                    {errors.phone && <p className="text-red-400 text-[11px] mt-0.5 pl-1">{errors.phone}</p>}
+                  </div>
+
+                  {/* 4. Service Interested In */}
+                  <div>
+                    <select
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                      className={`w-full px-3 py-2 rounded-lg bg-white/5 border ${
+                        errors.service ? 'border-red-400/80 ring-1 ring-red-400/40' : 'border-white/10 hover:border-white/20 focus:border-[#2563EB]'
+                      } ${formData.service ? 'text-white' : 'text-white/40'} text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#2563EB] transition-colors`}
+                    >
+                      <option value="" disabled className="bg-[#131b2e] text-white/50">
+                        Service Interested In *
+                      </option>
+                      {ENQUIRY_SERVICES.map((s) => (
+                        <option key={s} value={s} className="bg-[#131b2e] text-white">
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.service && <p className="text-red-400 text-[11px] mt-0.5 pl-1">{errors.service}</p>}
+                  </div>
+
+                  {/* 5. Message */}
+                  <div>
+                    <textarea
+                      name="message"
+                      rows={3}
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Tell us about your project requirements... *"
+                      className={`w-full px-3 py-2 rounded-lg bg-white/5 border ${
+                        errors.message ? 'border-red-400/80 ring-1 ring-red-400/40' : 'border-white/10 hover:border-white/20 focus:border-[#2563EB]'
+                      } text-white placeholder:text-white/40 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#2563EB] transition-colors resize-none`}
+                    />
+                    {errors.message && <p className="text-red-400 text-[11px] mt-0.5 pl-1">{errors.message}</p>}
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-2.5 px-4 rounded-lg bg-[#2563EB] hover:bg-blue-600 active:scale-[0.99] text-white font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed group"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Sending Enquiry...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Send Enquiry</span>
+                        <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
+
+          {/* Column 2: Services */}
           <div className="space-y-4">
             <h4 className="font-label-caps text-label-caps uppercase text-on-secondary tracking-wider font-bold">
               SERVICES
@@ -57,6 +302,8 @@ export default function Footer({ onNavigate }) {
               ))}
             </ul>
           </div>
+
+          {/* Column 3: Platforms */}
           <div className="space-y-4">
             <h4 className="font-label-caps text-label-caps uppercase text-on-secondary tracking-wider font-bold">PLATFORMS</h4>
             <ul className="space-y-2.5 font-body-sm text-body-sm">
@@ -69,6 +316,8 @@ export default function Footer({ onNavigate }) {
               ))}
             </ul>
           </div>
+
+          {/* Column 4: Official Head Office & Social Channels */}
           <div className="space-y-4">
             <h4 className="font-label-caps text-label-caps uppercase text-on-secondary tracking-wider font-bold">
               OFFICIAL HEAD OFFICE
@@ -83,7 +332,8 @@ export default function Footer({ onNavigate }) {
                 </p>
               </div>
             </div>
-            {/* Social & Contact Channels - Right Corner under Official Head Office */}
+
+            {/* Social & Contact Channels */}
             <div className="pt-2">
               <p className="text-xs font-bold text-on-secondary uppercase tracking-wider mb-2.5">
                 Connect With Us
@@ -135,9 +385,11 @@ export default function Footer({ onNavigate }) {
             </div>
           </div>
         </div>
+
+        {/* Copyright strip */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 font-mono-tag text-mono-tag text-on-primary-container">
           <p>
-            © 2026 AparaiTech Software. All rights reserved. 
+            &copy; {new Date().getFullYear()} AparaiTech Software. All rights reserved. 
           </p>
           <p>
             Pune (Hinjawadi Phase 2) 

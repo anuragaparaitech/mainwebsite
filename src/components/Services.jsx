@@ -1,98 +1,193 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { services } from '../services/serviceDetails';
+import CardImage from './CardImage';
+import { services as allServices } from '../services/serviceDetails';
+
+const KEY_SERVICES = [
+  {
+    slug: 'cloud-solutions',
+    title: 'Cloud Solutions',
+    description:
+      'Scalable cloud infrastructure, seamless migration, and reliable cloud solutions that help businesses grow efficiently.',
+    image: '/images/services/cloud-solutions.jpg',
+    alt: 'Cloud infrastructure and connected devices',
+    icon: 'cloud',
+    link: '/services/cloud-solutions',
+  },
+  {
+    slug: 'custom-software-development',
+    title: 'Custom Software Development',
+    description:
+      'Tailor-made software solutions designed to streamline business operations and solve complex business challenges.',
+    image: '/images/services/custom-software.jpg',
+    alt: 'Custom software development team engineering tailored applications',
+    icon: 'terminal',
+    link: '/services/custom-software-development',
+  },
+  {
+    slug: 'ai-automation',
+    title: 'AI & Machine Learning',
+    description:
+      'Intelligent AI and machine learning solutions that automate processes, generate insights, and accelerate innovation.',
+    image: '/images/services/ai-automation.jpg',
+    alt: 'AI automation neural interface and algorithmic processing',
+    icon: 'psychology',
+    link: '/services/ai-automation',
+  },
+];
 
 export default function Services({ standalone = false }) {
-  const [activeSlug, setActiveSlug] = useState('cloud-solutions');
-  const activeService = services.find((service) => service.slug === activeSlug) || services[0];
-
   return (
-    <section id="services" className={`w-full bg-surface text-on-surface ${standalone ? 'pb-32' : 'py-32'}`}>
-      {standalone ? (
-        <div className="services-hero">
+    <section id="services" className={`w-full bg-surface text-on-surface ${standalone ? 'pb-24 sm:pb-32' : 'py-20 sm:py-28 lg:py-32'}`}>
+      {standalone && (
+        <div className="services-hero mb-16 sm:mb-20">
           <div className="services-hero-content">
             <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
+              <span className="inline-flex items-center gap-2 font-label-caps text-xs sm:text-sm font-bold text-secondary tracking-widest uppercase mb-3">
                 <span className="w-2 h-0.5 bg-secondary"></span>
-                TECHNICAL CAPABILITIES
+                OUR SERVICES
               </span>
-              <h2 className="font-headline-lg text-headline-lg font-bold text-white tracking-tight">
-                High-Assurance Digital Services
-              </h2>
-              <p className="font-body-md text-body-md text-white/90 mt-2 max-w-xl">
-                Modular engineering practices purpose-built to accelerate production timetables while neutralizing operational risk.
+              <h1 className="font-headline-lg text-headline-lg font-bold text-white tracking-tight leading-tight">
+                Technology Solutions That Drive Innovation
+              </h1>
+              <p className="font-body-md text-body-md text-white/90 mt-3 max-w-xl leading-relaxed">
+                Explore our core technology capabilities designed to help businesses innovate, scale, and succeed.
               </p>
             </div>
           </div>
         </div>
-      ) : null}
-      <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
+      )}
+
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-gutter-lg">
+        {/* Section Heading */}
         {!standalone && (
-          <div className="mb-16">
-            <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-3">
-                <span className="w-2 h-0.5 bg-secondary"></span>
-                TECHNICAL CAPABILITIES
-              </span>
-              <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
-                High-Assurance Digital Services
-              </h2>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
-                Modular engineering practices purpose-built to accelerate production timetables while neutralizing operational risk.
-              </p>
-            </div>
+          <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
+            <span className="inline-flex items-center gap-2 font-label-caps text-xs sm:text-sm font-bold text-secondary tracking-widest uppercase mb-3">
+              <span className="w-2 h-0.5 bg-secondary"></span>
+              OUR SERVICES
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-on-surface tracking-tight leading-tight">
+              Technology Solutions That Drive Innovation
+            </h2>
+            <p className="text-base sm:text-lg text-on-surface-variant mt-3 max-w-2xl leading-relaxed">
+              Explore our core technology capabilities designed to help businesses innovate, scale, and succeed.
+            </p>
           </div>
         )}
-        <div className="grid gap-6 lg:grid-cols-[minmax(230px,0.32fr)_minmax(0,1fr)] lg:gap-10">
-          <nav aria-label="Service categories" className="space-y-2">
-            {services.map((service, index) => {
-              const isActive = service.slug === activeService.slug;
-              return (
-                <button
-                  aria-pressed={isActive}
-                  className={`flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
-                    isActive
-                      ? 'border-secondary bg-secondary text-white shadow-sm'
-                      : 'border-outline-variant/50 bg-white text-on-surface hover:border-secondary/50 hover:bg-surface-container-low'
-                  }`}
-                  key={service.slug}
-                  onClick={() => setActiveSlug(service.slug)}
-                  onFocus={() => setActiveSlug(service.slug)}
-                  onMouseEnter={() => setActiveSlug(service.slug)}
-                  type="button"
-                >
-                  <span className="w-7 shrink-0 font-mono-tag text-xs opacity-70">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="font-semibold leading-snug">{service.cardTitle}</span>
-                  <span aria-hidden="true" className="material-symbols-outlined ml-auto text-[18px]">chevron_right</span>
-                </button>
-              );
-            })}
-          </nav>
-          <section aria-label={`${activeService.cardTitle} industries`} className="min-w-0 rounded-xl border border-outline-variant/50 bg-white p-5 shadow-sm md:p-8">
-            <div className="flex flex-col gap-5 border-b border-outline-variant/40 pb-6 sm:flex-row sm:items-end sm:justify-between">
-              <div className="max-w-2xl">
-                <h3 className="mt-2 text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{activeService.cardTitle}</h3>
-                <p className="mt-3 leading-relaxed text-on-surface-variant">{activeService.shortDescription}</p>
-              </div>
-              <Link className="inline-flex shrink-0 items-center gap-2 font-semibold text-secondary hover:underline" to={`/services/${activeService.slug}`}>
-                Explore service <span aria-hidden="true">→</span>
+
+        {/* 3 Key Service Cards (Desktop: 3 in 1 row | Tablet: 2 in row 1, 1 below | Mobile: Stacked) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {KEY_SERVICES.map((service) => (
+            <div
+              key={service.slug}
+              className="group flex flex-col bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+            >
+              {/* Prominent Service Image */}
+              <Link to={service.link} className="block overflow-hidden relative" tabIndex={-1} aria-hidden="true">
+                <CardImage
+                  src={service.image}
+                  alt={service.alt}
+                  icon={service.icon}
+                  className="h-52 sm:h-56 md:h-60 w-full shrink-0"
+                />
               </Link>
+
+              {/* Card Body */}
+              <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 text-secondary flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-[19px]">{service.icon}</span>
+                    </span>
+                    <Link
+                      to={service.link}
+                      className="text-xl sm:text-[22px] font-bold text-on-surface tracking-tight group-hover:text-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
+                    >
+                      {service.title}
+                    </Link>
+                  </div>
+                  <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+
+                {/* Subtle Explore Service Link */}
+                <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                  <Link
+                    to={service.link}
+                    className="inline-flex items-center gap-2 text-sm sm:text-[15px] font-semibold text-secondary hover:text-blue-700 transition-colors group/link focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
+                  >
+                    <span>Explore Service</span>
+                    <span
+                      className="transition-transform duration-200 group-hover/link:translate-x-1"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </Link>
+                </div>
+              </div>
             </div>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {activeService.industryUseCases.map(({ industry, description }) => (
+          ))}
+        </div>
+
+        {/* View All Services CTA Button on Homepage */}
+        {!standalone && (
+          <div className="mt-12 sm:mt-16 text-center">
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-surface-container-low text-secondary font-semibold text-sm sm:text-base border border-slate-200/90 hover:bg-secondary hover:text-white hover:border-secondary transition-all duration-200 shadow-sm"
+            >
+              <span>Explore All Capabilities</span>
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        )}
+
+        {/* Standalone page: Additional Capabilities Catalog */}
+        {standalone && (
+          <div className="mt-20 pt-16 border-t border-slate-200/80">
+            <div className="max-w-3xl mb-12">
+              <span className="inline-flex items-center gap-2 font-label-caps text-xs sm:text-sm font-bold text-secondary tracking-widest uppercase mb-2">
+                <span className="w-2 h-0.5 bg-secondary"></span>
+                FULL PORTFOLIO
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">
+                Specialized Engineering & Consulting Services
+              </h2>
+              <p className="text-sm sm:text-base text-on-surface-variant mt-2">
+                Deep architectural expertise across modern infrastructure, enterprise software, and cloud platforms.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {allServices.map((service) => (
                 <Link
-                  aria-label={`${industry}: ${description}. Explore ${activeService.cardTitle}`}
-                  className="group rounded-lg border border-outline-variant/40 bg-surface p-4 transition-colors hover:border-secondary/50 hover:bg-secondary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-                  key={industry}
-                  to={`/services/${activeService.slug}`}
+                  key={service.slug}
+                  to={`/services/${service.slug}`}
+                  className="group p-6 rounded-xl border border-slate-200/80 bg-white hover:border-secondary/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between"
                 >
-                  <span className="font-semibold text-on-surface group-hover:text-secondary">{industry}</span>
-                  <span className="mt-2 block text-sm leading-relaxed text-on-surface-variant">{description}</span>
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="w-9 h-9 rounded-lg bg-slate-50 text-secondary group-hover:bg-blue-50 flex items-center justify-center transition-colors">
+                        <span className="material-symbols-outlined text-[20px]">{service.icon}</span>
+                      </span>
+                      <h3 className="font-bold text-base text-on-surface group-hover:text-secondary transition-colors">
+                        {service.cardTitle}
+                      </h3>
+                    </div>
+                    <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                      {service.shortDescription}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-secondary">
+                    <span>Learn more</span>
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                  </div>
                 </Link>
               ))}
             </div>
-          </section>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
