@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import CardImage from './CardImage';
 import { platforms } from '../data/platforms';
+import { fetchPlatforms } from '../services/api';
 
 // Local images mapping for platforms that have dedicated assets in public/images/platforms/
 const LOCAL_PLATFORM_IMAGES = {
@@ -88,6 +89,8 @@ export const HOMEPAGE_PLATFORMS = [
 ];
 
 export default function Platforms({ standalone = false, onOpenDrawer }) {
+  const [platformsList, setPlatformsList] = useState(platforms);
+  const [homePlatformsList, setHomePlatformsList] = useState(HOMEPAGE_PLATFORMS);
   const location = useLocation();
   const detailsScrollRef = useRef(null);
 
@@ -103,18 +106,57 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
     return platforms[0]?.slug || 'novatax';
   });
 
+  useEffect(() => {
+    fetchPlatforms().then((data) => {
+      if (!data || !data.length) return;
+
+      const merged = platforms.map((item) => {
+        const remote = data.find(
+          (d) => d.slug === item.slug || d.name.toLowerCase() === item.name.toLowerCase()
+        );
+        if (!remote) return item;
+
+        return {
+          ...item,
+          name: remote.name || item.name,
+          description: remote.description || item.description,
+          tagline: remote.shortDescription || item.tagline,
+          domain: remote.url || item.domain,
+          features: remote.features?.length ? remote.features : item.features,
+        };
+      });
+
+      setPlatformsList(merged);
+
+      const mergedHome = HOMEPAGE_PLATFORMS.map((item) => {
+        const remote = data.find(
+          (d) => d.slug === item.slug || d.name.toLowerCase() === item.name.toLowerCase()
+        );
+        if (!remote) return item;
+
+        return {
+          ...item,
+          name: remote.name || item.name,
+          description: remote.shortDescription || remote.description || item.description,
+        };
+      });
+
+      setHomePlatformsList(mergedHome);
+    });
+  }, []);
+
   // Sync selected platform if query param changes
   useEffect(() => {
     if (platformQuery) {
-      const match = platforms.find((p) => p.slug === platformQuery);
+      const match = platformsList.find((p) => p.slug === platformQuery);
       if (match) {
         setSelectedSlug(match.slug);
       }
     }
-  }, [platformQuery]);
+  }, [platformQuery, platformsList]);
 
   const selectedPlatform =
-    platforms.find((platform) => platform.slug === selectedSlug) || platforms[0];
+    platformsList.find((platform) => platform.slug === selectedSlug) || platformsList[0];
 
   const handleSelectPlatform = (slug) => {
     setSelectedSlug(slug);
@@ -157,7 +199,7 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
 
           {/* 6 Platform Cards in a 3 × 2 Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {HOMEPAGE_PLATFORMS.map((platform) => (
+            {homePlatformsList.map((platform) => (
               <div
                 key={platform.slug}
                 className="group flex flex-col bg-white dark:bg-[#0c1830] rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden justify-between"
@@ -270,14 +312,14 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
             <aside className="w-full lg:w-[29%] lg:shrink-0 bg-white rounded-2xl border border-slate-200/90 shadow-sm p-3.5 sm:p-4 flex flex-col">
               <div className="pb-3 mb-2 border-b border-slate-100 flex items-center justify-between">
                 <span className="font-mono-tag text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Platforms ({platforms.length})
+                  Platforms ({platformsList.length})
                 </span>
                 <span className="text-[11px] text-slate-400">Select to explore</span>
               </div>
 
               {/* Compact navigation list with tight 4-6px spacing */}
               <div className="space-y-1.5 lg:max-h-[680px] overflow-y-auto pr-1">
-                {platforms.map((platform) => {
+                {platformsList.map((platform) => {
                   const isActive = platform.slug === selectedSlug;
                   return (
                     <button

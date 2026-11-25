@@ -1,22 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { JOB_OPENINGS, CAREERS_CONFIG } from '../config/careersConfig';
 import JobApplicationModal from './JobApplicationModal';
+import { fetchCareers } from '../services/api';
 
 export default function Careers({ onBackToHome }) {
+  const [jobs, setJobs] = useState(JOB_OPENINGS);
   const [selectedDepartment, setSelectedDepartment] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [activeJobForApplication, setActiveJobForApplication] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const departments = ['All', ...new Set(JOB_OPENINGS.map((j) => j.department))];
+  useEffect(() => {
+    fetchCareers().then((data) => {
+      if (!data || !data.length) return;
 
-  const filteredJobs = JOB_OPENINGS.filter((job) => {
+      setJobs(
+        data.map((item) => ({
+          id: item._id || item.title,
+          title: item.title,
+          department: item.department,
+          location: item.location,
+          type: item.type,
+          experience: item.experience || '',
+          tags: item.tags || [],
+          description: item.description,
+          requirements: item.requirements || [],
+          responsibilities: item.responsibilities || [],
+        }))
+      );
+    });
+  }, []);
+
+  const departments = ['All', ...new Set(jobs.map((j) => j.department))];
+
+  const filteredJobs = jobs.filter((job) => {
     const matchesDept = selectedDepartment === 'All' || job.department === selectedDepartment;
     const matchesSearch =
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      (job.tags && job.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase())));
     return matchesDept && matchesSearch;
   });
 

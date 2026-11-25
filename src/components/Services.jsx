@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CardImage from './CardImage';
 import { services as allServices } from '../services/serviceDetails';
+import { fetchServices } from '../services/api';
 
 const KEY_SERVICES = [
   {
@@ -36,6 +38,62 @@ const KEY_SERVICES = [
 ];
 
 export default function Services({ standalone = false }) {
+  const [servicesList, setServicesList] = useState(allServices);
+  const [keyServicesList, setKeyServicesList] = useState(KEY_SERVICES);
+
+  useEffect(() => {
+    fetchServices().then((data) => {
+      if (!data || !data.length) return;
+
+      const merged = allServices.map((item) => {
+        const remote = data.find((d) => d.slug === item.slug || d.title === item.title);
+        if (!remote) return item;
+
+        return {
+          ...item,
+          title: remote.title || item.title,
+          cardTitle: remote.title || item.cardTitle,
+          shortDescription: remote.shortDescription || item.shortDescription,
+          description: remote.description || item.description,
+          icon: remote.icon || item.icon,
+          image: remote.image || item.image,
+          features: remote.features?.length ? remote.features : item.features,
+        };
+      });
+
+      data.forEach((remote) => {
+        if (!merged.some((m) => m.slug === remote.slug || m.title === remote.title)) {
+          merged.push({
+            slug: remote.slug || remote._id,
+            cardTitle: remote.title,
+            title: remote.title,
+            shortDescription: remote.shortDescription,
+            description: remote.description,
+            icon: remote.icon || 'star',
+            image: remote.image || '/images/services/cloud-solutions.jpg',
+            features: remote.features || [],
+          });
+        }
+      });
+
+      setServicesList(merged);
+
+      const mergedKeys = KEY_SERVICES.map((item) => {
+        const remote = data.find((d) => d.slug === item.slug || d.title === item.title);
+        if (!remote) return item;
+
+        return {
+          ...item,
+          title: remote.title || item.title,
+          description: remote.shortDescription || remote.description || item.description,
+          icon: remote.icon || item.icon,
+          image: remote.image || item.image,
+        };
+      });
+
+      setKeyServicesList(mergedKeys);
+    });
+  }, []);
   return (
     <section id="services" className={`w-full bg-surface text-on-surface ${standalone ? 'pb-24 sm:pb-32' : 'py-20 sm:py-28 lg:py-32'}`}>
       {standalone && (
@@ -76,7 +134,7 @@ export default function Services({ standalone = false }) {
 
         {/* 3 Key Service Cards (Desktop: 3 in 1 row | Tablet: 2 in row 1, 1 below | Mobile: Stacked) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {KEY_SERVICES.map((service) => (
+          {keyServicesList.map((service) => (
             <div
               key={service.slug}
               className="group flex flex-col bg-white dark:bg-[#0c1830] rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
@@ -160,7 +218,7 @@ export default function Services({ standalone = false }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {allServices.map((service) => (
+              {servicesList.map((service) => (
                 <Link
                   key={service.slug}
                   to={`/services/${service.slug}`}
