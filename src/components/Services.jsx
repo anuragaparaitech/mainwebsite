@@ -43,55 +43,44 @@ export default function Services({ standalone = false }) {
 
   useEffect(() => {
     fetchServices().then((data) => {
-      if (!data || !data.length) return;
+      if (!data) return;
 
-      const merged = allServices.map((item) => {
-        const remote = data.find((d) => d.slug === item.slug || d.title === item.title);
-        if (!remote) return item;
-
+      const activeList = data.map((remote) => {
+        const local = allServices.find(
+          (item) => item.slug === remote.slug || item.title === remote.title
+        );
         return {
-          ...item,
-          title: remote.title || item.title,
-          cardTitle: remote.title || item.cardTitle,
-          shortDescription: remote.shortDescription || item.shortDescription,
-          description: remote.description || item.description,
-          icon: remote.icon || item.icon,
-          image: remote.image || item.image,
-          features: remote.features?.length ? remote.features : item.features,
+          ...local,
+          ...remote,
+          slug: remote.slug || local?.slug || remote._id,
+          cardTitle: remote.cardTitle || remote.title || local?.cardTitle || local?.title,
+          title: remote.title || local?.title,
+          shortDescription: remote.shortDescription || remote.description || local?.shortDescription,
+          description: remote.description || local?.description,
+          icon: remote.icon || local?.icon || 'star',
+          image: remote.image || local?.image || '/images/services/cloud-solutions.jpg',
+          features: remote.features?.length ? remote.features : (local?.features || []),
         };
       });
 
-      data.forEach((remote) => {
-        if (!merged.some((m) => m.slug === remote.slug || m.title === remote.title)) {
-          merged.push({
-            slug: remote.slug || remote._id,
-            cardTitle: remote.title,
-            title: remote.title,
-            shortDescription: remote.shortDescription,
-            description: remote.description,
-            icon: remote.icon || 'star',
-            image: remote.image || '/images/services/cloud-solutions.jpg',
-            features: remote.features || [],
-          });
-        }
-      });
+      setServicesList(activeList);
 
-      setServicesList(merged);
-
-      const mergedKeys = KEY_SERVICES.map((item) => {
-        const remote = data.find((d) => d.slug === item.slug || d.title === item.title);
-        if (!remote) return item;
-
+      const activeKeys = KEY_SERVICES.filter((keyItem) =>
+        data.some((d) => d.slug === keyItem.slug || d.title === keyItem.title)
+      ).map((keyItem) => {
+        const remote = data.find((d) => d.slug === keyItem.slug || d.title === keyItem.title);
         return {
-          ...item,
-          title: remote.title || item.title,
-          description: remote.shortDescription || remote.description || item.description,
-          icon: remote.icon || item.icon,
-          image: remote.image || item.image,
+          ...keyItem,
+          title: remote.cardTitle || remote.title || keyItem.title,
+          description: remote.shortDescription || remote.description || keyItem.description,
+          icon: remote.icon || keyItem.icon,
+          image: remote.image || keyItem.image,
         };
       });
 
-      setKeyServicesList(mergedKeys);
+      if (activeKeys.length > 0) {
+        setKeyServicesList(activeKeys);
+      }
     });
   }, []);
   return (

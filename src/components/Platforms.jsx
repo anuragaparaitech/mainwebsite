@@ -108,40 +108,41 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
 
   useEffect(() => {
     fetchPlatforms().then((data) => {
-      if (!data || !data.length) return;
+      if (!data) return;
 
-      const merged = platforms.map((item) => {
-        const remote = data.find(
-          (d) => d.slug === item.slug || d.name.toLowerCase() === item.name.toLowerCase()
+      const activePlatforms = data.map((remote) => {
+        const local = platforms.find(
+          (p) => p.slug === remote.slug || p.name.toLowerCase() === remote.name.toLowerCase()
         );
-        if (!remote) return item;
-
         return {
-          ...item,
-          name: remote.name || item.name,
-          description: remote.description || item.description,
-          tagline: remote.shortDescription || item.tagline,
-          domain: remote.url || item.domain,
-          features: remote.features?.length ? remote.features : item.features,
+          ...local,
+          ...remote,
+          slug: remote.slug || local?.slug || remote._id,
+          name: remote.name || local?.name,
+          tagline: remote.tagline || remote.shortDescription || local?.tagline,
+          description: remote.description || local?.description,
+          domain: remote.url || local?.domain,
+          features: remote.features?.length ? remote.features : (local?.features || []),
         };
       });
 
-      setPlatformsList(merged);
+      setPlatformsList(activePlatforms);
 
-      const mergedHome = HOMEPAGE_PLATFORMS.map((item) => {
+      const activeHome = HOMEPAGE_PLATFORMS.filter((homeItem) =>
+        data.some((d) => d.slug === homeItem.slug || d.name.toLowerCase() === homeItem.name.toLowerCase())
+      ).map((homeItem) => {
         const remote = data.find(
-          (d) => d.slug === item.slug || d.name.toLowerCase() === item.name.toLowerCase()
+          (d) => d.slug === homeItem.slug || d.name.toLowerCase() === homeItem.name.toLowerCase()
         );
-        if (!remote) return item;
-
         return {
-          ...item,
-          name: remote.name || item.name,
-          description: remote.shortDescription || remote.description || item.description,
+          ...homeItem,
+          name: remote.name || homeItem.name,
+          description: remote.shortDescription || remote.description || homeItem.description,
+          image: remote.image || homeItem.image,
         };
       });
 
-      setHomePlatformsList(mergedHome);
+      setHomePlatformsList(activeHome);
     });
   }, []);
 
