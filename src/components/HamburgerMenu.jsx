@@ -167,6 +167,9 @@ export default function HamburgerMenu({ open, onClose }) {
             <Link className={linkClass('/platforms')} to="/platforms" onClick={onClose}>
               Our Platforms
             </Link>
+            <Link className={linkClass('/collaboration')} to="/collaboration" onClick={onClose}>
+              Collaborations
+            </Link>
             <Link className={linkClass('/careers')} to="/careers" onClick={onClose}>
               Careers
             </Link>
@@ -174,7 +177,8 @@ export default function HamburgerMenu({ open, onClose }) {
             <div className="flex flex-col">
               <div
                 className={`flex items-center justify-between rounded transition-colors ${
-                  location.pathname.startsWith('/about') || location.pathname.startsWith('/contact')
+                  location.pathname.startsWith('/about') ||
+                  location.pathname.startsWith('/contact')
                     ? 'bg-secondary-fixed text-secondary'
                     : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
                 }`}

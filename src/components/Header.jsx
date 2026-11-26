@@ -211,7 +211,7 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-7 bg-white/75 backdrop-blur-md rounded-full px-7 py-2.5 shadow-sm border border-white/30">
+          <nav className="hidden lg:flex items-center gap-3 xl:gap-7 bg-white/75 backdrop-blur-md rounded-full px-4 xl:px-7 py-2.5 shadow-sm border border-white/30">
             {/* Services Mega Menu Trigger */}
             <div
               className="relative"
@@ -262,6 +262,17 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
             >
               Our Platforms
               {location.pathname === '/platforms' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+              )}
+            </Link>
+
+            <Link
+              className={navLinkClass(location.pathname.startsWith('/collaboration'))}
+              to="/collaboration"
+              onClick={handleImmediateClose}
+            >
+              Collaborations
+              {location.pathname.startsWith('/collaboration') && (
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
               )}
             </Link>

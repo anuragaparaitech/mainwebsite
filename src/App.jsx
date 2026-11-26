@@ -16,6 +16,7 @@ import ContactUs from './components/ContactUs';
 import EnquiryModal from './components/EnquiryModal';
 import Footer from './components/Footer';
 import ServicesPage from './components/ServicesPage';
+import CollaborationPage from './components/CollaborationPage';
 import ServiceDetailPage from './components/ServiceDetailPage';
 import {
   AiAutomationPage,
@@ -70,6 +71,7 @@ export default function App() {
           )}
         />
         <Route path="/platforms" element={<Platforms standalone onOpenDrawer={() => setDrawerOpen(true)} />} />
+        <Route path="/collaboration" element={<CollaborationPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/services/cloud-solutions" element={<CloudSolutionsPage />} />
         <Route path="/services/custom-software-development" element={<CustomSoftwareDevelopmentPage />} />
