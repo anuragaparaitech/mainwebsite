@@ -3,29 +3,22 @@ import useScrolled from '../hooks/useScrolled';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
-import { services } from '../services/serviceDetails';
+import { services as defaultServices } from '../services/serviceDetails';
+import { fetchServices } from '../services/api';
 
-// Arrange existing services into 3 desktop columns (BNY reference design structure):
-const desktopColumns = [
-  // Column 1: Cloud Solutions, Custom Software Development, AI & Machine Learning
-  services.filter((s) => ['cloud-solutions', 'custom-software-development', 'ai-automation'].includes(s.slug)),
-  // Column 2: DevOps & CI/CD, Cybersecurity & Compliance, Mobile App Development
-  services.filter((s) => ['devops-ci-cd', 'cybersecurity-solutions', 'mobile-app-development'].includes(s.slug)),
-  // Column 3: SaaS Product Engineering, Data Analytics & BI, Enterprise IT Consulting, UI/UX Design, Digital Portfolios & Bios
-  services.filter((s) => [
-    'saas-product-engineering',
-    'data-analytics-bi',
-    'enterprise-it-consulting',
-    'ui-ux-design',
-    'digital-portfolios-bios',
-  ].includes(s.slug)),
-];
+function buildServiceColumns(list) {
+  const col1Slugs = ['cloud-solutions', 'custom-software-development', 'ai-automation'];
+  const col2Slugs = ['devops-ci-cd', 'cybersecurity-solutions', 'mobile-app-development'];
+  const col1 = list.filter((s) => col1Slugs.includes(s.slug));
+  const col2 = list.filter((s) => col2Slugs.includes(s.slug));
+  const col3 = list.filter((s) => !col1Slugs.includes(s.slug) && !col2Slugs.includes(s.slug));
 
-// Tablet: 2 balanced columns (6 and 5 services)
-const tabletColumns = [
-  services.slice(0, 6),
-  services.slice(6),
-];
+  const splitPoint = Math.ceil(list.length / 2);
+  return {
+    desktopColumns: [col1, col2, col3],
+    tabletColumns: [list.slice(0, splitPoint), list.slice(splitPoint)],
+  };
+}
 
 // About Aparaitech Dropdown Options (5 sections)
 export const ABOUT_NAV_OPTIONS = [
@@ -65,9 +58,28 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
   const scrolled = useScrolled(50);
   const location = useLocation();
 
+  const [servicesList, setServicesList] = useState(defaultServices);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [openAccordionSlug, setOpenAccordionSlug] = useState(null);
+
+  useEffect(() => {
+    fetchServices().then((data) => {
+      if (!data) return;
+      const merged = data.map((remote) => {
+        const local = defaultServices.find((s) => s.slug === remote.slug || s.title === remote.title);
+        return {
+          ...local,
+          ...remote,
+          slug: remote.slug || local?.slug || remote._id,
+          cardTitle: remote.cardTitle || local?.cardTitle || remote.title,
+        };
+      });
+      setServicesList(merged);
+    });
+  }, []);
+
+  const { desktopColumns, tabletColumns } = buildServiceColumns(servicesList);
 
   const closeTimerRef = useRef(null);
   const aboutCloseTimerRef = useRef(null);
@@ -494,7 +506,7 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
 
             {/* Mobile: Vertically stacked collapsible accordion */}
             <div className="block md:hidden space-y-2">
-              {services.map((service) => {
+              {servicesList.map((service) => {
                 const isExpanded = openAccordionSlug === service.slug;
                 return (
                   <div key={service.slug} className="border-b border-slate-100 pb-2">

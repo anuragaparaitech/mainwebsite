@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { submitCustomerEnquiry, submitNewsletterSubscription } from '../services/enquiryService';
+import { fetchContactDetails, fetchSiteContent } from '../services/api';
 
 const ENQUIRY_SERVICES = [
   'Cloud Solutions',
@@ -24,6 +25,53 @@ const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=
 const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(OFFICIAL_ADDRESS)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
 
 export default function Footer() {
+  const [contactInfo, setContactInfo] = useState(null);
+  const [siteContent, setSiteContent] = useState(null);
+
+  useEffect(() => {
+    fetchContactDetails().then((d) => {
+      if (d) setContactInfo(d);
+    });
+    fetchSiteContent().then((d) => {
+      if (d) setSiteContent(d);
+    });
+  }, []);
+
+  const fullAddress = contactInfo?.address
+    ? [contactInfo.address, contactInfo.city, contactInfo.state, contactInfo.postalCode, contactInfo.country]
+        .filter(Boolean)
+        .join(', ')
+    : OFFICIAL_ADDRESS;
+  const primaryAddressLine = contactInfo?.address || 'Office 122, Gera Imperium';
+  const secondaryAddressLine = contactInfo?.city
+    ? [contactInfo.city, contactInfo.state, contactInfo.postalCode].filter(Boolean).join(', ')
+    : 'Opposite Wipro Circle, Hinjawadi Phase 2, Pune, Maharashtra – 411057';
+  const phone = contactInfo?.phone || '+91 8261840199';
+  const whatsappNumber = contactInfo?.whatsapp || phone;
+  const whatsappDigits = whatsappNumber.replace(/[^\d]/g, '');
+  const footerEmail = contactInfo?.altEmail || contactInfo?.email || 'info@ai.aparaitech.org';
+  const hrEmail = contactInfo?.hrEmail || contactInfo?.supportEmail || 'hr@info.aparaitech.org';
+  const businessHours = contactInfo?.businessHours || 'Monday – Friday (9:30 AM – 6:30 PM IST)';
+  const linkedinUrl = contactInfo?.linkedinUrl || 'https://www.linkedin.com/company/aparaitech';
+  const instagramUrl = contactInfo?.instagramUrl || 'https://www.instagram.com/aparaitech';
+  const youtubeUrl = contactInfo?.youtubeUrl || 'https://www.youtube.com/@aparaitech';
+  const mapEmbedUrl =
+    contactInfo?.mapEmbedUrl ||
+    `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+  const mapSearchUrl = `https://maps.google.com/?q=${encodeURIComponent(fullAddress)}`;
+  const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`;
+
+  const complianceList = siteContent?.complianceStandards?.length
+    ? siteContent.complianceStandards
+    : [
+        'ISO 27001 & 9001 Aligned',
+        'Govt. of India MSME Registered',
+        'Maharashtra Shop & Est. (Gumasta)',
+        'GST Registered Commercial Firm',
+        'SOC 2 Type II Security Controls',
+        'Dedicated Sovereign VPC Hosting',
+      ];
+
   // Enquiry form state
   const [formData, setFormData] = useState({
     fullName: '',
@@ -186,10 +234,10 @@ export default function Footer() {
                 </div>
 
                 <h3 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-white tracking-tight mt-3">
-                  APARAITECH SOFTWARE
+                  {(contactInfo?.companyLabel || 'APARAITECH SOFTWARE').toUpperCase()}
                 </h3>
                 <p className="text-sm sm:text-base text-slate-300 mt-1.5 font-medium leading-relaxed">
-                  Enterprise AI Systems &bull; Cloud Platforms &bull; Mission-Critical Software Engineering
+                  {siteContent?.footerHeadline || 'Enterprise AI Systems • Cloud Platforms • Mission-Critical Software Engineering'}
                 </p>
 
                 {/* B. Office Address (Two-line layout with location icon) */}
@@ -202,10 +250,10 @@ export default function Footer() {
                       Corporate Office Address
                     </p>
                     <p className="text-sm sm:text-[15px] font-semibold text-white leading-snug">
-                      Office 122, Gera Imperium
+                      {primaryAddressLine}
                     </p>
                     <p className="text-xs sm:text-sm text-slate-300 leading-snug mt-0.5">
-                      Opposite Wipro Circle, Hinjawadi Phase 2, Pune, Maharashtra &ndash; 411057
+                      {secondaryAddressLine}
                     </p>
                   </div>
                 </div>
@@ -215,7 +263,7 @@ export default function Footer() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* CARD 1 – CALLING */}
                 <a
-                  href="tel:+918261840199"
+                  href={`tel:${phone.replace(/[^+\d]/g, '')}`}
                   className="group p-3.5 rounded-xl bg-white/[0.04] hover:bg-blue-600/15 border border-white/10 hover:border-blue-400/40 transition-all duration-200 flex flex-col justify-between"
                   title="Call Aparaitech Corporate Desk"
                 >
@@ -228,13 +276,13 @@ export default function Footer() {
                     </span>
                   </div>
                   <p className="text-xs sm:text-[13px] font-semibold text-white tracking-tight group-hover:text-blue-200 truncate">
-                    +91 8261840199
+                    {phone}
                   </p>
                 </a>
 
                 {/* CARD 2 – WHATSAPP */}
                 <a
-                  href="https://wa.me/918261840199"
+                  href={`https://wa.me/${whatsappDigits}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group p-3.5 rounded-xl bg-white/[0.04] hover:bg-emerald-600/15 border border-white/10 hover:border-emerald-400/40 transition-all duration-200 flex flex-col justify-between"
@@ -251,13 +299,13 @@ export default function Footer() {
                     </span>
                   </div>
                   <p className="text-xs sm:text-[13px] font-semibold text-white tracking-tight group-hover:text-emerald-200 truncate">
-                    +91 8261840199
+                    {whatsappNumber}
                   </p>
                 </a>
 
                 {/* CARD 3 – INQUIRIES */}
                 <a
-                  href="mailto:info@ai.aparaitech.org"
+                  href={`mailto:${footerEmail}`}
                   className="group p-3.5 rounded-xl bg-white/[0.04] hover:bg-cyan-600/15 border border-white/10 hover:border-cyan-400/40 transition-all duration-200 flex flex-col justify-between"
                   title="Send Inquiries via Email"
                 >
@@ -270,7 +318,7 @@ export default function Footer() {
                     </span>
                   </div>
                   <p className="text-xs sm:text-[13px] font-semibold text-white tracking-tight group-hover:text-cyan-200 truncate">
-                    info@ai.aparaitech.org
+                    {footerEmail}
                   </p>
                 </a>
               </div>
@@ -281,17 +329,17 @@ export default function Footer() {
                   <span className="material-symbols-outlined text-[17px] text-blue-400">badge</span>
                   <span>HR:</span>
                   <a
-                    href="mailto:hr@info.aparaitech.org"
+                    href={`mailto:${hrEmail}`}
                     className="font-semibold text-white hover:text-blue-300 transition-colors underline decoration-blue-500/50 hover:decoration-blue-300"
                   >
-                    hr@info.aparaitech.org
+                    {hrEmail}
                   </a>
                 </div>
                 <div className="flex items-center gap-2 text-slate-300">
                   <span className="material-symbols-outlined text-[17px] text-emerald-400">schedule</span>
                   <span>
                     Business Hours:{' '}
-                    <strong className="text-white font-medium">Monday &ndash; Friday (9:30 AM &ndash; 6:30 PM IST)</strong>
+                    <strong className="text-white font-medium">{businessHours}</strong>
                   </span>
                 </div>
               </div>
@@ -302,7 +350,7 @@ export default function Footer() {
               <div className="w-full flex-1 min-h-[240px] sm:min-h-[280px] rounded-2xl overflow-hidden border border-white/15 shadow-inner relative bg-slate-900">
                 <iframe
                   title="Aparaitech Corporate Headquarters Office Location"
-                  src={MAPS_EMBED_URL}
+                  src={mapEmbedUrl}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -316,7 +364,7 @@ export default function Footer() {
               {/* Action Buttons: Open in Maps & Get Directions */}
               <div className="grid grid-cols-2 gap-3 mt-3.5">
                 <a
-                  href={MAPS_SEARCH_URL}
+                  href={mapSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm border border-white/15 hover:border-white/30 transition-all text-center"
@@ -326,7 +374,7 @@ export default function Footer() {
                 </a>
 
                 <a
-                  href={MAPS_DIRECTIONS_URL}
+                  href={mapDirectionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-semibold text-xs sm:text-sm transition-all shadow-sm hover:shadow-md hover:shadow-blue-500/20 text-center"
@@ -352,17 +400,17 @@ export default function Footer() {
             </Link>
 
             <p className="text-xs font-mono-tag uppercase tracking-wider text-blue-400 font-semibold">
-              Enterprise Technology Partner
+              {siteContent?.footerTagline || 'Enterprise Technology Partner'}
             </p>
 
             <p className="text-sm text-slate-300 leading-relaxed font-normal">
-              Global enterprise engineering partner. Architecting scalable AI-native software platforms, autonomous agents, and resilient cloud architectures.
+              {siteContent?.footerDescription || 'Global enterprise engineering partner. Architecting scalable AI-native software platforms, autonomous agents, and resilient cloud architectures.'}
             </p>
 
             {/* Clickable link: View on Google Maps ↗ */}
             <div>
               <a
-                href={MAPS_SEARCH_URL}
+                href={mapSearchUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors group/link"
@@ -678,36 +726,18 @@ export default function Footer() {
               STANDARDS &amp; COMPLIANCE
             </h4>
             <ul className="space-y-2 text-xs sm:text-[13px] text-slate-300">
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                <span>ISO 27001 &amp; 9001 Aligned</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                <span>Govt. of India MSME Registered</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                <span>Maharashtra Shop &amp; Est. (Gumasta)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                <span>GST Registered Commercial Firm</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                <span>SOC 2 Type II Security Controls</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                <span>Dedicated Sovereign VPC Hosting</span>
-              </li>
+              {complianceList.map((std) => (
+                <li key={std} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                  <span>{std}</span>
+                </li>
+              ))}
             </ul>
 
             {/* LinkedIn Link */}
             <div className="pt-2">
               <a
-                href="https://www.linkedin.com/company/aparaitech"
+                href={linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors group/li"
@@ -727,7 +757,7 @@ export default function Footer() {
               <div className="flex items-center gap-2.5">
                 {/* LinkedIn */}
                 <a
-                  href="https://www.linkedin.com/company/aparaitech"
+                  href={linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="AparaiTech LinkedIn"
@@ -740,7 +770,7 @@ export default function Footer() {
 
                 {/* Instagram */}
                 <a
-                  href="https://www.instagram.com/aparaitech"
+                  href={instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="AparaiTech Instagram"
@@ -753,7 +783,7 @@ export default function Footer() {
 
                 {/* YouTube */}
                 <a
-                  href="https://www.youtube.com/@aparaitech"
+                  href={youtubeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="AparaiTech YouTube"
@@ -766,7 +796,7 @@ export default function Footer() {
 
                 {/* Email */}
                 <a
-                  href="mailto:info@ai.aparaitech.org"
+                  href={`mailto:${footerEmail}`}
                   aria-label="Email AparaiTech"
                   className="w-8 h-8 rounded-lg bg-white/5 hover:bg-cyan-600 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-200 border border-white/10 hover:border-cyan-600 shadow-sm hover:scale-105"
                 >
@@ -804,7 +834,7 @@ export default function Footer() {
 
           {/* Right: Office Location */}
           <div className="text-center md:text-right text-slate-400">
-            <span>Office 122, Gera Imperium, Hinjawadi Phase 2, Pune</span>
+            <span>{primaryAddressLine}, {secondaryAddressLine.split(',').slice(0, 2).join(',')}</span>
           </div>
         </div>
       </div>

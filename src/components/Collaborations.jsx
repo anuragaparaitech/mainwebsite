@@ -117,7 +117,7 @@ export default function Collaborations({ standalone = false }) {
 
   useEffect(() => {
     fetchCollaborations().then((data) => {
-      if (!data || !data.length) return;
+      if (!data) return;
 
       const mapped = data.map((remote) => {
         const local = DEFAULT_COLLABORATIONS.find(
@@ -132,8 +132,8 @@ export default function Collaborations({ standalone = false }) {
           category: remote.category || remote.type || 'Academic MoU',
           date: remote.date || (remote.startDate ? new Date(remote.startDate).toLocaleDateString() : ''),
           description: remote.description,
-          highlights: remote.highlights?.length ? remote.highlights : (local?.highlights || []),
-          image: remote.image || local?.image || '/images/services/cloud-solutions.jpg',
+          highlights: remote.highlights?.length ? remote.highlights : [],
+          image: remote.image || remote.logo || local?.image || '/images/services/cloud-solutions.jpg',
           website: remote.website || local?.website || '',
         };
       });
@@ -141,6 +141,8 @@ export default function Collaborations({ standalone = false }) {
       setCollaborations(mapped);
     });
   }, []);
+
+  if (!collaborations.length && !standalone) return null;
 
   return (
     <section

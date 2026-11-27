@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { services } from '../services/serviceDetails';
+import { services as localServices } from '../services/serviceDetails';
+import { fetchServices } from '../services/api';
 
 function SectionHeading({ title, description }) {
   return (
@@ -30,11 +31,56 @@ function ServiceNotFound() {
 export default function ServiceDetailPage({ slug: serviceSlug }) {
   const { slug: routeSlug } = useParams();
   const slug = serviceSlug || routeSlug;
-  const service = services.find((item) => item.slug === slug);
+  const [service, setService] = useState(() => localServices.find((item) => item.slug === slug) || null);
+  const [checkedRemote, setCheckedRemote] = useState(false);
+
+  useEffect(() => {
+    const localMatch = localServices.find((item) => item.slug === slug) || null;
+    setService(localMatch);
+    setCheckedRemote(false);
+
+    fetchServices().then((data) => {
+      setCheckedRemote(true);
+      if (!data) return;
+
+      const remote = data.find((item) => item.slug === slug);
+      if (!remote) {
+        if (localMatch) {
+          setService(null);
+        }
+        return;
+      }
+
+      setService({
+        ...localMatch,
+        ...remote,
+        title: remote.title || localMatch?.title,
+        heroDescription: remote.heroDescription || remote.shortDescription || localMatch?.heroDescription || remote.description,
+        overview: remote.overview || remote.description || localMatch?.overview,
+        image: remote.image || localMatch?.image,
+        imageAlt: remote.imageAlt || localMatch?.imageAlt || remote.title,
+        features: remote.features?.length ? remote.features : (localMatch?.features || []),
+        technologies: remote.technologies?.length ? remote.technologies : (localMatch?.technologies || []),
+        process: remote.process?.length ? remote.process : (localMatch?.process || []),
+        benefits: remote.benefits?.length ? remote.benefits : (localMatch?.benefits || []),
+        useCases: remote.useCases?.length ? remote.useCases : (localMatch?.useCases || []),
+        industryUseCases: remote.industryUseCases?.length ? remote.industryUseCases : localMatch?.industryUseCases,
+        faqs: remote.faqs?.length ? remote.faqs : (localMatch?.faqs || []),
+      });
+    });
+  }, [slug]);
 
   useEffect(() => {
     document.title = service ? `${service.title} | Aparaitech Software` : 'Services | Aparaitech Software';
   }, [service]);
+
+  if (!service && !checkedRemote) {
+    return (
+      <main className="min-h-[65vh] bg-surface px-6 pt-40 pb-24">
+        <div className="max-w-3xl mx-auto text-on-surface-variant">Loading service details...</div>
+      </main>
+    );
+  }
 
   if (!service) return <ServiceNotFound />;
 
@@ -47,9 +93,11 @@ export default function ServiceDetailPage({ slug: serviceSlug }) {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] text-on-surface">
                 {service.title}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
-                {service.heroDescription}
-              </p>
+              {service.heroDescription && (
+                <p className="mt-6 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+                  {service.heroDescription}
+                </p>
+              )}
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <Link className="inline-flex items-center gap-2 rounded bg-secondary px-6 py-3.5 text-white font-semibold hover:bg-secondary-container transition-colors" to="/contact">
                   Discuss your project <span aria-hidden="true">→</span>
@@ -62,7 +110,7 @@ export default function ServiceDetailPage({ slug: serviceSlug }) {
             {service.image && (
               <div className="overflow-hidden rounded-xl border border-outline-variant/50 bg-white shadow-sm">
                 <img
-                  alt={service.imageAlt}
+                  alt={service.imageAlt || service.title}
                   className="aspect-[3/2] w-full object-cover"
                   height="600"
                   src={service.image}
@@ -74,109 +122,125 @@ export default function ServiceDetailPage({ slug: serviceSlug }) {
         </div>
       </section>
 
-      <section className="px-6 py-16 md:py-20 bg-white border-y border-outline-variant/30">
-        <div className="max-w-[1200px] mx-auto grid md:grid-cols-[0.7fr_1.3fr] gap-8 md:gap-16">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">A solution shaped around your business</h2>
-          </div>
-          <p className="text-lg leading-relaxed text-on-surface-variant">{service.overview}</p>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 md:py-24">
-        <div className="max-w-[1200px] mx-auto">
-          <SectionHeading title="What we can deliver" description="A focused set of capabilities, selected to fit your goals and existing environment." />
-          <div className="grid sm:grid-cols-2 gap-4">
-            {service.features.map((feature) => (
-              <div className="flex gap-4 rounded-lg border border-outline-variant/50 bg-white p-5 md:p-6" key={feature}>
-                <p className="font-semibold leading-relaxed">{feature}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 md:py-24 bg-white border-y border-outline-variant/30">
-        <div className="max-w-[1200px] mx-auto">
-          <SectionHeading title="A clear path from idea to impact" description="Our delivery process keeps decisions visible and progress grounded in your business priorities." />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {service.process.map(([step, detail]) => (
-              <article className="rounded-lg border border-outline-variant/50 p-6" key={step}>
-                <h3 className="text-xl font-bold">{step}</h3>
-                <p className="mt-3 leading-relaxed text-on-surface-variant">{detail}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 md:py-24">
-        <div className="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-14 lg:gap-20">
-          <div>
-            <SectionHeading title="The right tools for the job" description="We select technologies to suit your requirements, team, and operational context—not the other way around." />
-            <div className="flex flex-wrap gap-2.5">
-              {service.technologies.map((technology) => (
-                <span className="rounded-full border border-outline-variant/60 bg-white px-4 py-2 text-sm font-medium text-on-surface-variant" key={technology}>
-                  {technology}
-                </span>
-              ))}
+      {service.overview && (
+        <section className="px-6 py-16 md:py-20 bg-white border-y border-outline-variant/30">
+          <div className="max-w-[1200px] mx-auto grid md:grid-cols-[0.7fr_1.3fr] gap-8 md:gap-16">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight">A solution shaped around your business</h2>
             </div>
+            <p className="text-lg leading-relaxed text-on-surface-variant">{service.overview}</p>
           </div>
-          <div>
-            <SectionHeading title="Outcomes that matter" />
-            <div className="space-y-5">
-              {service.benefits.map(([benefit, detail]) => (
-                <div className="border-b border-outline-variant/50 pb-5 last:border-0" key={benefit}>
-                  <h3 className="font-semibold">{benefit}</h3>
-                  <p className="mt-1.5 leading-relaxed text-on-surface-variant">{detail}</p>
+        </section>
+      )}
+
+      {service.features && service.features.length > 0 && (
+        <section className="px-6 py-20 md:py-24">
+          <div className="max-w-[1200px] mx-auto">
+            <SectionHeading title="What we can deliver" description="A focused set of capabilities, selected to fit your goals and existing environment." />
+            <div className="grid sm:grid-cols-2 gap-4">
+              {service.features.map((feature) => (
+                <div className="flex gap-4 rounded-lg border border-outline-variant/50 bg-white p-5 md:p-6" key={feature}>
+                  <p className="font-semibold leading-relaxed">{feature}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="px-6 py-20 md:py-24 bg-white border-y border-outline-variant/30">
-        <div className="max-w-[1200px] mx-auto">
-          <SectionHeading title="Use cases" description="Explore practical ways this service can support teams across different industries." />
-          {service.industryUseCases ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {service.industryUseCases.map(({ industry, description }) => (
-                <article className="rounded-lg border border-outline-variant/50 bg-surface p-5 md:p-6" key={industry}>
-                  <h3 className="font-semibold text-on-surface">{industry}</h3>
-                  <p className="mt-2 leading-relaxed text-on-surface-variant">{description}</p>
+      {service.process && service.process.length > 0 && (
+        <section className="px-6 py-20 md:py-24 bg-white border-y border-outline-variant/30">
+          <div className="max-w-[1200px] mx-auto">
+            <SectionHeading title="A clear path from idea to impact" description="Our delivery process keeps decisions visible and progress grounded in your business priorities." />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {service.process.map(([step, detail]) => (
+                <article className="rounded-lg border border-outline-variant/50 p-6" key={step}>
+                  <h3 className="text-xl font-bold">{step}</h3>
+                  <p className="mt-3 leading-relaxed text-on-surface-variant">{detail}</p>
                 </article>
               ))}
             </div>
-          ) : (
-            <ul className="grid gap-4 sm:grid-cols-2">
-              {service.useCases.map((useCase) => (
-                <li className="flex gap-3 rounded-lg bg-surface px-5 py-4 leading-relaxed" key={useCase}>
-                  <span aria-hidden="true" className="material-symbols-outlined text-secondary">arrow_outward</span>
-                  <span>{useCase}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </section>
-
-      <section className="px-6 py-20 md:py-24">
-        <div className="max-w-[900px] mx-auto">
-          <SectionHeading title="Frequently asked questions" />
-          <div className="divide-y divide-outline-variant/60 border-y border-outline-variant/60">
-            {service.faqs.map(([question, answer]) => (
-              <details className="group py-5" key={question}>
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-semibold">
-                  {question}
-                  <span aria-hidden="true" className="text-xl text-secondary transition-transform group-open:rotate-45">+</span>
-                </summary>
-                <p className="mt-4 max-w-3xl leading-relaxed text-on-surface-variant">{answer}</p>
-              </details>
-            ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {((service.technologies && service.technologies.length > 0) || (service.benefits && service.benefits.length > 0)) && (
+        <section className="px-6 py-20 md:py-24">
+          <div className="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-14 lg:gap-20">
+            {service.technologies && service.technologies.length > 0 && (
+              <div>
+                <SectionHeading title="The right tools for the job" description="We select technologies to suit your requirements, team, and operational context—not the other way around." />
+                <div className="flex flex-wrap gap-2.5">
+                  {service.technologies.map((technology) => (
+                    <span className="rounded-full border border-outline-variant/60 bg-white px-4 py-2 text-sm font-medium text-on-surface-variant" key={technology}>
+                      {technology}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {service.benefits && service.benefits.length > 0 && (
+              <div>
+                <SectionHeading title="Outcomes that matter" />
+                <div className="space-y-5">
+                  {service.benefits.map(([benefit, detail]) => (
+                    <div className="border-b border-outline-variant/50 pb-5 last:border-0" key={benefit}>
+                      <h3 className="font-semibold">{benefit}</h3>
+                      <p className="mt-1.5 leading-relaxed text-on-surface-variant">{detail}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {(service.industryUseCases?.length > 0 || service.useCases?.length > 0) && (
+        <section className="px-6 py-20 md:py-24 bg-white border-y border-outline-variant/30">
+          <div className="max-w-[1200px] mx-auto">
+            <SectionHeading title="Use cases" description="Explore practical ways this service can support teams across different industries." />
+            {service.industryUseCases?.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {service.industryUseCases.map(({ industry, description }) => (
+                  <article className="rounded-lg border border-outline-variant/50 bg-surface p-5 md:p-6" key={industry}>
+                    <h3 className="font-semibold text-on-surface">{industry}</h3>
+                    <p className="mt-2 leading-relaxed text-on-surface-variant">{description}</p>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <ul className="grid gap-4 sm:grid-cols-2">
+                {service.useCases.map((useCase) => (
+                  <li className="flex gap-3 rounded-lg bg-surface px-5 py-4 leading-relaxed" key={useCase}>
+                    <span aria-hidden="true" className="material-symbols-outlined text-secondary">arrow_outward</span>
+                    <span>{useCase}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+      )}
+
+      {service.faqs && service.faqs.length > 0 && (
+        <section className="px-6 py-20 md:py-24">
+          <div className="max-w-[900px] mx-auto">
+            <SectionHeading title="Frequently asked questions" />
+            <div className="divide-y divide-outline-variant/60 border-y border-outline-variant/60">
+              {service.faqs.map(([question, answer]) => (
+                <details className="group py-5" key={question}>
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-semibold">
+                    {question}
+                    <span aria-hidden="true" className="text-xl text-secondary transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="mt-4 max-w-3xl leading-relaxed text-on-surface-variant">{answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="px-6 py-16 md:py-20 bg-primary-container text-white">
         <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-8">

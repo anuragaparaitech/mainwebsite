@@ -65,24 +65,28 @@ export default function Services({ standalone = false }) {
 
       setServicesList(activeList);
 
-      const activeKeys = KEY_SERVICES.filter((keyItem) =>
-        data.some((d) => d.slug === keyItem.slug || d.title === keyItem.title)
-      ).map((keyItem) => {
-        const remote = data.find((d) => d.slug === keyItem.slug || d.title === keyItem.title);
+      const flaggedHome = activeList.filter((s) => s.showOnHomepage === true);
+      const sourceForHome = flaggedHome.length > 0
+        ? flaggedHome
+        : activeList.filter((s) => KEY_SERVICES.some((k) => k.slug === s.slug));
+
+      const mappedHome = sourceForHome.map((s) => {
+        const keyMeta = KEY_SERVICES.find((k) => k.slug === s.slug);
         return {
-          ...keyItem,
-          title: remote.cardTitle || remote.title || keyItem.title,
-          description: remote.shortDescription || remote.description || keyItem.description,
-          icon: remote.icon || keyItem.icon,
-          image: remote.image || keyItem.image,
+          slug: s.slug,
+          title: s.cardTitle || keyMeta?.title || s.title,
+          description: s.shortDescription || keyMeta?.description || s.description,
+          image: s.image || keyMeta?.image || '/images/services/cloud-solutions.jpg',
+          alt: s.imageAlt || keyMeta?.alt || s.title,
+          icon: s.icon || keyMeta?.icon || 'star',
+          link: `/services/${s.slug}`,
         };
       });
 
-      if (activeKeys.length > 0) {
-        setKeyServicesList(activeKeys);
-      }
+      setKeyServicesList(mappedHome);
     });
   }, []);
+
   return (
     <section id="services" className={`w-full bg-surface text-on-surface ${standalone ? 'pb-24 sm:pb-32' : 'py-20 sm:py-28 lg:py-32'}`}>
       {standalone && (
@@ -105,7 +109,6 @@ export default function Services({ standalone = false }) {
       )}
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-gutter-lg">
-        {/* Section Heading */}
         {!standalone && (
           <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
             <span className="inline-flex items-center gap-2 font-label-caps text-xs sm:text-sm font-bold text-secondary tracking-widest uppercase mb-3">
@@ -121,14 +124,12 @@ export default function Services({ standalone = false }) {
           </div>
         )}
 
-        {/* 3 Key Service Cards (Desktop: 3 in 1 row | Tablet: 2 in row 1, 1 below | Mobile: Stacked) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {keyServicesList.map((service) => (
             <div
               key={service.slug}
               className="group flex flex-col bg-white dark:bg-[#0c1830] rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
             >
-              {/* Prominent Service Image */}
               <Link to={service.link} className="block overflow-hidden relative" tabIndex={-1} aria-hidden="true">
                 <CardImage
                   src={service.image}
@@ -138,7 +139,6 @@ export default function Services({ standalone = false }) {
                 />
               </Link>
 
-              {/* Card Body */}
               <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between">
                 <div>
                   <div className="flex items-center gap-2.5 mb-3">
@@ -157,7 +157,6 @@ export default function Services({ standalone = false }) {
                   </p>
                 </div>
 
-                {/* Subtle Explore Service Link */}
                 <div className="pt-6 mt-6 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
                   <Link
                     to={service.link}
@@ -177,7 +176,6 @@ export default function Services({ standalone = false }) {
           ))}
         </div>
 
-        {/* View All Services CTA Button on Homepage */}
         {!standalone && (
           <div className="mt-12 sm:mt-16 text-center">
             <Link
@@ -190,7 +188,6 @@ export default function Services({ standalone = false }) {
           </div>
         )}
 
-        {/* Standalone page: Additional Capabilities Catalog */}
         {standalone && (
           <div className="mt-20 pt-16 border-t border-slate-200/80">
             <div className="max-w-3xl mb-12">
@@ -219,7 +216,7 @@ export default function Services({ standalone = false }) {
                         <span className="material-symbols-outlined text-[20px]">{service.icon}</span>
                       </span>
                       <h3 className="font-bold text-base text-on-surface group-hover:text-secondary transition-colors">
-                        {service.cardTitle}
+                        {service.cardTitle || service.title}
                       </h3>
                     </div>
                     <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed line-clamp-3">

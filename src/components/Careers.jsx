@@ -1,10 +1,46 @@
 import { useState, useEffect } from 'react';
-import { JOB_OPENINGS, CAREERS_CONFIG } from '../config/careersConfig';
+import { JOB_OPENINGS } from '../config/careersConfig';
 import JobApplicationModal from './JobApplicationModal';
-import { fetchCareers } from '../services/api';
+import { fetchCareers, fetchSiteContent } from '../services/api';
+
+const DEFAULT_HERO = {
+  eyebrow: 'CAREERS AT APARAITECH',
+  title: 'Engineering the Core Systems That Power Enterprise Software.',
+  subtitle:
+    'Join a high-assurance team of engineers, researchers, and system designers building proprietary enterprise SaaS, distributed cloud backbones, and applied AI inference engines.',
+  badges: ['Active Hiring Season', 'Pune CoE & Bengaluru Hub', 'ISO 27001 Engineering Discipline'],
+  cultureEyebrow: 'OUR ENGINEERING PRINCIPLES',
+  cultureHeading: 'Why Build Your Career at AparaiTech?',
+};
+
+const DEFAULT_CULTURE_PILLARS = [
+  {
+    number: '01',
+    title: '100% Production Ownership',
+    description:
+      'No artificial shelfware or legacy ticket churn. Every commit you deploy powers real enterprise transactions, cloud kitchen logistics, or high-throughput communication clusters.',
+    footer: 'High-Velocity Release Cadence',
+  },
+  {
+    number: '02',
+    title: 'Modern Architecture Stack',
+    description:
+      'Work with state-of-the-art tooling: React, Node.js, Go, Python LLM pipelines, vector databases, multi-cloud Kubernetes, and strict domain-driven architectures.',
+    footer: 'Full Technical Autonomy',
+  },
+  {
+    number: '03',
+    title: 'Leadership Mentorship',
+    description:
+      'Collaborate directly with engineering leadership, principal architects, and international partners. We cultivate engineers who want to grow into system architects and tech leads.',
+    footer: 'Direct Career Acceleration',
+  },
+];
 
 export default function Careers({ onBackToHome }) {
   const [jobs, setJobs] = useState(JOB_OPENINGS);
+  const [heroContent, setHeroContent] = useState(DEFAULT_HERO);
+  const [culturePillars, setCulturePillars] = useState(DEFAULT_CULTURE_PILLARS);
   const [selectedDepartment, setSelectedDepartment] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedJobId, setExpandedJobId] = useState(null);
@@ -13,7 +49,7 @@ export default function Careers({ onBackToHome }) {
 
   useEffect(() => {
     fetchCareers().then((data) => {
-      if (!data || !data.length) return;
+      if (!data) return;
 
       setJobs(
         data.map((item) => ({
@@ -29,6 +65,21 @@ export default function Careers({ onBackToHome }) {
           responsibilities: item.responsibilities || [],
         }))
       );
+    });
+
+    fetchSiteContent().then((data) => {
+      if (!data) return;
+      setHeroContent({
+        eyebrow: data.careersHeroEyebrow || DEFAULT_HERO.eyebrow,
+        title: data.careersHeroTitle || DEFAULT_HERO.title,
+        subtitle: data.careersHeroSubtitle || DEFAULT_HERO.subtitle,
+        badges: data.careersHeroBadges?.length ? data.careersHeroBadges : DEFAULT_HERO.badges,
+        cultureEyebrow: data.careersCultureEyebrow || DEFAULT_HERO.cultureEyebrow,
+        cultureHeading: data.careersCultureHeading || DEFAULT_HERO.cultureHeading,
+      });
+      if (Array.isArray(data.careersCulturePillars) && data.careersCulturePillars.length) {
+        setCulturePillars(data.careersCulturePillars.filter((p) => p.isActive !== false));
+      }
     });
   }, []);
 
@@ -61,23 +112,19 @@ export default function Careers({ onBackToHome }) {
 
   return (
     <div className="w-full bg-surface text-on-surface">
-      {/* Hero Section with Custom Background Image */}
       <section className="relative pt-36 pb-24 md:pt-44 md:pb-32 text-white overflow-hidden">
-        {/* Background Image Container */}
         <div className="absolute inset-0 z-0">
           <img
             src="/images/careers/careers-hero.jpg"
             alt="AparaiTech Careers and Growth"
             className="w-full h-full object-cover object-center"
           />
-          {/* Subtle multi-layer gradient overlays for text readability & brand coherence */}
           <div className="absolute inset-0 bg-[#0B132B]/80 via-[#0F172A]/75 to-[#0B132B]/90"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B132B]/95 via-[#0B132B]/75 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-black/30"></div>
         </div>
 
         <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg relative z-10">
-          {/* Breadcrumb / Back Navigation */}
           <div className="mb-8">
             <button
               onClick={onBackToHome}
@@ -92,101 +139,71 @@ export default function Careers({ onBackToHome }) {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 font-label-caps text-label-caps font-bold text-secondary-fixed tracking-widest uppercase mb-4">
               <span className="w-2 h-0.5 bg-secondary-fixed"></span>
-              CAREERS AT APARAITECH
+              {heroContent.eyebrow}
             </span>
             <h1 className="font-display-hero-mobile md:font-display-hero text-headline-lg md:text-display-hero font-bold text-white tracking-tight leading-tight mb-6 drop-shadow-sm">
-              Engineering the Core Systems That Power Enterprise Software.
+              {heroContent.title}
             </h1>
             <p className="font-body-lg text-body-lg text-slate-200 max-w-2xl leading-relaxed mb-8 drop-shadow-sm">
-              Join a high-assurance team of engineers, researchers, and system designers building proprietary enterprise SaaS, distributed cloud backbones, and applied AI inference engines.
+              {heroContent.subtitle}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-white">
-              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                <span>Active Hiring Season</span>
-              </div>
-              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 shadow-xs">
-                <span className="material-symbols-outlined text-[16px] text-secondary-fixed">location_on</span>
-                <span>Pune CoE &amp; Bengaluru Hub</span>
-              </div>
-              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 shadow-xs">
-                <span className="material-symbols-outlined text-[16px] text-secondary-fixed">verified</span>
-                <span>ISO 27001 Engineering Discipline</span>
-              </div>
+              {heroContent.badges.map((badge, i) => (
+                <div key={badge} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 shadow-xs">
+                  {i === 0 ? (
+                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  ) : (
+                    <span className="material-symbols-outlined text-[16px] text-secondary-fixed">
+                      {i === 1 ? 'location_on' : 'verified'}
+                    </span>
+                  )}
+                  <span>{badge}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Join AparaiTech / Culture Pillars */}
-      <section className="py-20 bg-surface-container-lowest border-y border-outline-variant/20">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
-          <div className="mb-14">
-            <span className="font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-2 block">
-              OUR ENGINEERING PRINCIPLES
-            </span>
-            <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
-              Why Build Your Career at AparaiTech?
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
-              <div>
-                <span className="font-display-hero text-headline-lg font-bold font-mono-code text-secondary block mb-4">
-                  01
-                </span>
-                <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                  100% Production Ownership
-                </h3>
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                  No artificial shelfware or legacy ticket churn. Every commit you deploy powers real enterprise transactions, cloud kitchen logistics, or high-throughput communication clusters.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-outline-variant/30 text-xs font-bold text-secondary uppercase tracking-wider">
-                High-Velocity Release Cadence
-              </div>
+      {culturePillars.length > 0 && (
+        <section className="py-20 bg-surface-container-lowest border-y border-outline-variant/20">
+          <div className="max-w-[1280px] mx-auto px-4 md:px-gutter-lg">
+            <div className="mb-14">
+              <span className="font-label-caps text-label-caps font-bold text-secondary tracking-widest uppercase mb-2 block">
+                {heroContent.cultureEyebrow}
+              </span>
+              <h2 className="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
+                {heroContent.cultureHeading}
+              </h2>
             </div>
 
-            <div className="p-8 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
-              <div>
-                <span className="font-display-hero text-headline-lg font-bold font-mono-code text-secondary block mb-4">
-                  02
-                </span>
-                <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                  Modern Architecture Stack
-                </h3>
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                  Work with state-of-the-art tooling: React, Node.js, Go, Python LLM pipelines, vector databases, multi-cloud Kubernetes, and strict domain-driven architectures.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-outline-variant/30 text-xs font-bold text-secondary uppercase tracking-wider">
-                Full Technical Autonomy
-              </div>
-            </div>
-
-            <div className="p-8 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
-              <div>
-                <span className="font-display-hero text-headline-lg font-bold font-mono-code text-secondary block mb-4">
-                  03
-                </span>
-                <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
-                  Leadership Mentorship
-                </h3>
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                  Collaborate directly with our founder, principal architects, and international partners. We cultivate engineers who want to grow into system architects and tech leads.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-outline-variant/30 text-xs font-bold text-secondary uppercase tracking-wider">
-                Direct Career Acceleration
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {culturePillars.map((pillar, idx) => (
+                <div key={pillar._id || pillar.number || idx} className="p-8 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+                  <div>
+                    <span className="font-display-hero text-headline-lg font-bold font-mono-code text-secondary block mb-4">
+                      {pillar.number || `0${idx + 1}`}
+                    </span>
+                    <h3 className="font-title-md text-headline-sm font-bold text-on-surface mb-3">
+                      {pillar.title}
+                    </h3>
+                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      {pillar.description}
+                    </p>
+                  </div>
+                  {pillar.footer && (
+                    <div className="mt-6 pt-4 border-t border-outline-variant/30 text-xs font-bold text-secondary uppercase tracking-wider">
+                      {pillar.footer}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Open Positions Section */}
       <section className="py-24 max-w-[1280px] mx-auto px-4 md:px-gutter-lg" id="open-positions">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
@@ -202,7 +219,6 @@ export default function Careers({ onBackToHome }) {
             </p>
           </div>
 
-          {/* Search Box */}
           <div className="w-full md:w-80 relative">
             <input
               type="text"
@@ -217,7 +233,6 @@ export default function Careers({ onBackToHome }) {
           </div>
         </div>
 
-        {/* Department Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
           {departments.map((dept) => (
             <button
@@ -231,7 +246,6 @@ export default function Careers({ onBackToHome }) {
           ))}
         </div>
 
-        {/* Job Openings List */}
         {filteredJobs.length === 0 ? (
           <div className="p-12 text-center bg-surface-container-lowest rounded-2xl border border-outline-variant/30">
             <span className="material-symbols-outlined text-[48px] text-outline mb-3">manage_search</span>
@@ -268,10 +282,12 @@ export default function Careers({ onBackToHome }) {
                           <span className="material-symbols-outlined text-[14px]">location_on</span>
                           {job.location}
                         </span>
-                        <span className="text-xs font-medium text-on-surface-variant flex items-center gap-1 bg-surface-container-low px-2.5 py-1 rounded">
-                          <span className="material-symbols-outlined text-[14px]">work</span>
-                          {job.experience}
-                        </span>
+                        {job.experience && (
+                          <span className="text-xs font-medium text-on-surface-variant flex items-center gap-1 bg-surface-container-low px-2.5 py-1 rounded">
+                            <span className="material-symbols-outlined text-[14px]">work</span>
+                            {job.experience}
+                          </span>
+                        )}
                       </div>
 
                       <h3 className="font-title-md text-headline-sm font-bold text-on-surface hover:text-secondary transition-colors">
@@ -282,19 +298,20 @@ export default function Careers({ onBackToHome }) {
                         {job.description}
                       </p>
 
-                      <div className="flex flex-wrap gap-1.5 pt-2">
-                        {job.tags.map((t) => (
-                          <span
-                            key={t}
-                            className="px-2.5 py-0.5 rounded-md bg-surface-container text-xs font-medium text-on-surface-variant"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
+                      {job.tags && job.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-2">
+                          {job.tags.map((t) => (
+                            <span
+                              key={t}
+                              className="px-2.5 py-0.5 rounded-md bg-surface-container text-xs font-medium text-on-surface-variant"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
-                    {/* Action buttons */}
                     <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between gap-3 shrink-0 pt-4 lg:pt-0 border-t lg:border-t-0 border-outline-variant/20">
                       <button
                         type="button"
@@ -318,7 +335,6 @@ export default function Careers({ onBackToHome }) {
                     </div>
                   </div>
 
-                  {/* Expanded View */}
                   {isExpanded && (
                     <div className="px-6 md:px-8 pb-8 pt-2 border-t border-outline-variant/30 bg-surface-container-low/40 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fadeIn">
                       <div>
@@ -358,7 +374,6 @@ export default function Careers({ onBackToHome }) {
           </div>
         )}
 
-        {/* General Application Banner */}
         <div className="mt-16 p-8 md:p-12 rounded-2xl bg-gradient-to-r from-primary-container via-surface-container-high to-surface-container-low border border-outline-variant/30 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
             <span className="font-label-caps text-label-caps font-bold text-secondary uppercase tracking-widest block mb-2">
@@ -381,7 +396,6 @@ export default function Careers({ onBackToHome }) {
         </div>
       </section>
 
-      {/* Application Modal */}
       <JobApplicationModal
         job={activeJobForApplication}
         isOpen={isModalOpen}

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchDispatch } from '../services/api';
+import { fetchSiteContent } from '../services/api';
 
-// Centralized array of news headlines & announcements (easily editable / extendable)
 export const NEWS_HEADLINES = [
   {
     id: 1,
@@ -52,17 +51,21 @@ export default function NewsTicker() {
   const [headlines, setHeadlines] = useState(NEWS_HEADLINES);
 
   useEffect(() => {
-    fetchDispatch().then((data) => {
-      if (!data || !data.length) return;
-      const dispatchHeadlines = data.map((d, i) => ({
-        id: `dispatch-${d._id || i}`,
-        text: d.title ? `${d.title} – ${d.message || ''}` : d.message,
-        link: d.link || '/#',
-        tag: d.tag || 'ANNOUNCEMENT',
-      }));
-      setHeadlines([...dispatchHeadlines, ...NEWS_HEADLINES]);
+    fetchSiteContent().then((data) => {
+      if (!data || !Array.isArray(data.newsHeadlines)) return;
+      const activeHeadlines = data.newsHeadlines
+        .filter((item) => item.isActive !== false)
+        .map((item, idx) => ({
+          id: item._id || idx + 1,
+          text: item.text,
+          link: item.link || '/services',
+          tag: item.tag || 'UPDATES',
+        }));
+      setHeadlines(activeHeadlines);
     });
   }, []);
+
+  if (!headlines.length) return null;
   return (
     <aside
       aria-label="Latest Announcements and News"

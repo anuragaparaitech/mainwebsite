@@ -4,15 +4,33 @@ import useEscape from '../hooks/useEscape';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
 import { ABOUT_NAV_OPTIONS } from './Header';
-import { services } from '../services/serviceDetails';
+import { services as defaultServices } from '../services/serviceDetails';
+import { fetchServices } from '../services/api';
 
 export default function HamburgerMenu({ open, onClose }) {
   useEscape(onClose, open);
   const location = useLocation();
 
+  const [servicesList, setServicesList] = useState(defaultServices);
   const [servicesExpanded, setServicesExpanded] = useState(false);
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [activeCategorySlug, setActiveCategorySlug] = useState(null);
+
+  useEffect(() => {
+    fetchServices().then((data) => {
+      if (!data) return;
+      const merged = data.map((remote) => {
+        const local = defaultServices.find((s) => s.slug === remote.slug || s.title === remote.title);
+        return {
+          ...local,
+          ...remote,
+          slug: remote.slug || local?.slug || remote._id,
+          cardTitle: remote.cardTitle || local?.cardTitle || remote.title,
+        };
+      });
+      setServicesList(merged);
+    });
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -108,7 +126,7 @@ export default function HamburgerMenu({ open, onClose }) {
                     View All Services Overview →
                   </Link>
 
-                  {services.map((service) => {
+                  {servicesList.map((service) => {
                     const isCatOpen = activeCategorySlug === service.slug;
                     return (
                       <div key={service.slug} className="py-1">

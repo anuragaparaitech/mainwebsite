@@ -112,33 +112,47 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
 
       const activePlatforms = data.map((remote) => {
         const local = platforms.find(
-          (p) => p.slug === remote.slug || p.name.toLowerCase() === remote.name.toLowerCase()
+          (p) => p.slug === remote.slug || p.name.toLowerCase() === (remote.name || '').toLowerCase()
         );
+        const slug = remote.slug || local?.slug || remote._id;
         return {
           ...local,
           ...remote,
-          slug: remote.slug || local?.slug || remote._id,
+          slug,
           name: remote.name || local?.name,
           tagline: remote.tagline || remote.shortDescription || local?.tagline,
           description: remote.description || local?.description,
           domain: remote.url || local?.domain,
+          image: remote.image || remote.logo || LOCAL_PLATFORM_IMAGES[slug] || local?.image,
           features: remote.features?.length ? remote.features : (local?.features || []),
+          benefits: remote.benefits?.length ? remote.benefits : (local?.benefits || []),
+          useCases: remote.useCases?.length ? remote.useCases : (local?.useCases || []),
         };
       });
 
       setPlatformsList(activePlatforms);
 
-      const activeHome = HOMEPAGE_PLATFORMS.filter((homeItem) =>
-        data.some((d) => d.slug === homeItem.slug || d.name.toLowerCase() === homeItem.name.toLowerCase())
-      ).map((homeItem) => {
-        const remote = data.find(
-          (d) => d.slug === homeItem.slug || d.name.toLowerCase() === homeItem.name.toLowerCase()
+      const flaggedHome = activePlatforms.filter((p) => p.showOnHomepage === true);
+      const sourceHome = flaggedHome.length > 0
+        ? flaggedHome
+        : activePlatforms.filter((p) => HOMEPAGE_PLATFORMS.some((h) => h.slug === p.slug));
+
+      const activeHome = sourceHome.map((remote) => {
+        const homeItem = HOMEPAGE_PLATFORMS.find(
+          (h) => h.slug === remote.slug || h.name.toLowerCase() === (remote.name || '').toLowerCase()
         );
         return {
-          ...homeItem,
-          name: remote.name || homeItem.name,
-          description: remote.shortDescription || remote.description || homeItem.description,
-          image: remote.image || homeItem.image,
+          slug: remote.slug,
+          name: remote.homepageName || homeItem?.name || remote.name,
+          image: (remote.image && (remote.image.startsWith('data:') || remote.image.startsWith('http')))
+            ? remote.image
+            : (LOCAL_PLATFORM_IMAGES[remote.slug] || remote.image || remote.logo || homeItem?.image || '/images/platforms/novatax.jpg'),
+          alt: homeItem?.alt || remote.name,
+          icon: remote.icon || homeItem?.icon || 'hub',
+          tag: remote.homepageTag || homeItem?.tag || remote.type || 'ENTERPRISE SAAS',
+          description: remote.shortDescription || remote.description || homeItem?.description,
+          status: remote.status || homeItem?.status || 'OPERATIONAL',
+          link: `/platforms?platform=${remote.slug}`,
         };
       });
 
@@ -153,8 +167,10 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
       if (match) {
         setSelectedSlug(match.slug);
       }
+    } else if (platformsList.length > 0 && !platformsList.some((p) => p.slug === selectedSlug)) {
+      setSelectedSlug(platformsList[0].slug);
     }
-  }, [platformQuery, platformsList]);
+  }, [platformQuery, platformsList, selectedSlug]);
 
   const selectedPlatform =
     platformsList.find((platform) => platform.slug === selectedSlug) || platformsList[0];
@@ -171,7 +187,10 @@ export default function Platforms({ standalone = false, onOpenDrawer }) {
   };
 
   const getPlatformImage = (platform) => {
-    return LOCAL_PLATFORM_IMAGES[platform.slug] || platform.image;
+    if (platform.image && (platform.image.startsWith('data:') || platform.image.startsWith('http'))) {
+      return platform.image;
+    }
+    return LOCAL_PLATFORM_IMAGES[platform.slug] || platform.image || platform.logo;
   };
 
   // =========================================================================
