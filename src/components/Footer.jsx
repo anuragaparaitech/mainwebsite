@@ -571,6 +571,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/collaborations" className="text-slate-300 hover:text-white transition-colors">
+                  Academic &amp; Enterprise Collaborations
+                </Link>
+              </li>
+              <li>
                 <Link to="/about#contact-details" className="text-slate-300 hover:text-white transition-colors">
                   Support &amp; Help Center
                 </Link>

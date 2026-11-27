@@ -277,6 +277,17 @@ export default function Header({ onOpenMenu, onOpenDrawer, solid = false }) {
               )}
             </Link>
 
+            <Link
+              className={navLinkClass(location.pathname === '/collaborations')}
+              to="/collaborations"
+              onClick={handleImmediateClose}
+            >
+              Collaborations
+              {location.pathname === '/collaborations' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2563EB] rounded-full"></span>
+              )}
+            </Link>
+
             {/* About Aparaitech Dropdown Menu Trigger */}
             <div
               className="relative"

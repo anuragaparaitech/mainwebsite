@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchDispatch } from '../services/api';
 
 // Centralized array of news headlines & announcements (easily editable / extendable)
 export const NEWS_HEADLINES = [
@@ -47,6 +49,20 @@ export const NEWS_HEADLINES = [
 ];
 
 export default function NewsTicker() {
+  const [headlines, setHeadlines] = useState(NEWS_HEADLINES);
+
+  useEffect(() => {
+    fetchDispatch().then((data) => {
+      if (!data || !data.length) return;
+      const dispatchHeadlines = data.map((d, i) => ({
+        id: `dispatch-${d._id || i}`,
+        text: d.title ? `${d.title} – ${d.message || ''}` : d.message,
+        link: d.link || '/#',
+        tag: d.tag || 'ANNOUNCEMENT',
+      }));
+      setHeadlines([...dispatchHeadlines, ...NEWS_HEADLINES]);
+    });
+  }, []);
   return (
     <aside
       aria-label="Latest Announcements and News"
@@ -85,7 +101,7 @@ export default function NewsTicker() {
             <div className="animate-ticker flex items-center whitespace-nowrap">
               {/* First Track Copy */}
               <div className="flex items-center">
-                {NEWS_HEADLINES.map((item) => (
+                {headlines.map((item) => (
                   <div key={`track1-${item.id}`} className="inline-flex items-center">
                     <Link
                       to={item.link}
@@ -112,7 +128,7 @@ export default function NewsTicker() {
 
               {/* Second Track Copy (Identical for 100% seamless infinite loop) */}
               <div className="flex items-center" aria-hidden="true">
-                {NEWS_HEADLINES.map((item) => (
+                {headlines.map((item) => (
                   <div key={`track2-${item.id}`} className="inline-flex items-center">
                     <Link
                       to={item.link}

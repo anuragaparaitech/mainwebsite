@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ImageCarousel from './ImageCarousel';
+import { fetchAboutCompany, fetchTeamMembers, fetchContactDetails } from '../services/api';
 
 // Company Photographs Slideshow Data (from existing public/images/ assets)
 const COMPANY_SLIDES = [
@@ -153,8 +154,35 @@ const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=
 export default function AboutAparaitech({ onBackToHome }) {
   const location = useLocation();
 
+  const [companyData, setCompanyData] = useState(null);
+  const [teamPods, setTeamPods] = useState(TEAM_MEMBERS);
+  const [contactInfo, setContactInfo] = useState(null);
+
   useEffect(() => {
     document.title = 'About Aparaitech | Corporate Overview, Principles, Team & Contact';
+
+    fetchAboutCompany().then((data) => {
+      if (data) setCompanyData(data);
+    });
+
+    fetchTeamMembers().then((data) => {
+      if (data && data.length) {
+        setTeamPods(
+          data.map((pod, i) => ({
+            id: pod._id || i,
+            name: pod.name,
+            designation: pod.badge || '',
+            image: pod.coverImage || '/images/philosophy/human-centric-engineering.jpg',
+            intro: pod.description,
+            tags: pod.badge ? [pod.badge] : [],
+          }))
+        );
+      }
+    });
+
+    fetchContactDetails().then((data) => {
+      if (data) setContactInfo(data);
+    });
   }, []);
 
   // Smooth scroll to targeted section when navigating via URL hash (#about-company, etc.)
@@ -302,7 +330,7 @@ export default function AboutAparaitech({ onBackToHome }) {
                   </div>
                   <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Our Vision</h4>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    To be the most dependable enterprise engineering partner, enabling global organizations to unlock human velocity through intelligent, autonomous digital infrastructure.
+                    {companyData?.vision || 'To be the most dependable enterprise engineering partner, enabling global organizations to unlock human velocity through intelligent, autonomous digital infrastructure.'}
                   </p>
                 </div>
 
@@ -312,7 +340,7 @@ export default function AboutAparaitech({ onBackToHome }) {
                   </div>
                   <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Our Mission</h4>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    To engineer high-reliability cloud platforms and AI systems governed by ISO 27001 data sovereignty, uncompromising integrity, and nimble sprint velocity.
+                    {companyData?.mission || 'To engineer high-reliability cloud platforms and AI systems governed by ISO 27001 data sovereignty, uncompromising integrity, and nimble sprint velocity.'}
                   </p>
                 </div>
               </div>
@@ -387,15 +415,15 @@ export default function AboutAparaitech({ onBackToHome }) {
 
           {/* 6 Principles Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {PRINCIPLES.map((principle) => (
+            {(companyData?.principles?.length ? companyData.principles : PRINCIPLES).map((principle, idx) => (
               <div
-                key={principle.id}
+                key={principle.id || principle._id || idx}
                 className="group p-7 rounded-2xl bg-white dark:bg-[#0c1830] border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
               >
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-500/20 text-[#2563eb] dark:text-blue-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                     <span className="material-symbols-outlined text-[24px]">
-                      {principle.icon}
+                      {principle.icon || 'verified'}
                     </span>
                   </div>
 
@@ -543,7 +571,7 @@ export default function AboutAparaitech({ onBackToHome }) {
 
           {/* Team Members Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {TEAM_MEMBERS.map((member) => (
+            {teamPods.map((member) => (
               <div
                 key={member.id}
                 className="group flex flex-col bg-white dark:bg-[#0c1830] rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
@@ -551,17 +579,19 @@ export default function AboutAparaitech({ onBackToHome }) {
                 {/* Member Photograph */}
                 <div className="h-56 sm:h-60 w-full overflow-hidden relative bg-slate-900">
                   <img
-                    src={member.image}
+                    src={member.image || '/images/philosophy/human-centric-engineering.jpg'}
                     alt={member.name}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-3 left-4 right-4">
-                    <span className="px-2.5 py-1 rounded bg-[#2563eb] text-white text-[11px] font-mono-tag font-bold uppercase tracking-wider">
-                      {member.designation}
-                    </span>
-                  </div>
+                  {member.designation && (
+                    <div className="absolute bottom-3 left-4 right-4">
+                      <span className="px-2.5 py-1 rounded bg-[#2563eb] text-white text-[11px] font-mono-tag font-bold uppercase tracking-wider">
+                        {member.designation}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Member Info Body */}
@@ -576,16 +606,18 @@ export default function AboutAparaitech({ onBackToHome }) {
                   </div>
 
                   {/* Skills / Tags */}
-                  <div className="pt-4 mt-5 border-t border-slate-100 dark:border-white/10 flex flex-wrap gap-1.5">
-                    {member.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                  {member.tags && member.tags.length > 0 && (
+                    <div className="pt-4 mt-5 border-t border-slate-100 dark:border-white/10 flex flex-wrap gap-1.5">
+                      {member.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

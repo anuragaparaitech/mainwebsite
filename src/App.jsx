@@ -10,6 +10,7 @@ import NewsTicker from './components/NewsTicker';
 import Philosophy from './components/Philosophy';
 import Services from './components/Services';
 import Platforms from './components/Platforms';
+import Collaborations from './components/Collaborations';
 import Careers from './components/Careers';
 import AboutAparaitech from './components/AboutAparaitech';
 import ContactUs from './components/ContactUs';
@@ -65,11 +66,13 @@ export default function App() {
                 <Philosophy />
                 <Services />
                 <Platforms onOpenDrawer={() => setDrawerOpen(true)} />
+                <Collaborations />
               </div>
             </main>
           )}
         />
         <Route path="/platforms" element={<Platforms standalone onOpenDrawer={() => setDrawerOpen(true)} />} />
+        <Route path="/collaborations" element={<Collaborations standalone />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/services/cloud-solutions" element={<CloudSolutionsPage />} />
         <Route path="/services/custom-software-development" element={<CustomSoftwareDevelopmentPage />} />

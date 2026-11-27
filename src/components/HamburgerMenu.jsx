@@ -170,6 +170,9 @@ export default function HamburgerMenu({ open, onClose }) {
             <Link className={linkClass('/careers')} to="/careers" onClick={onClose}>
               Careers
             </Link>
+            <Link className={linkClass('/collaborations')} to="/collaborations" onClick={onClose}>
+              Collaborations
+            </Link>
             {/* About Aparaitech with Collapsible Accordion */}
             <div className="flex flex-col">
               <div
